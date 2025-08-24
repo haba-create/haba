@@ -9,30 +9,41 @@ const app = express();
 
 // Debug: Log environment variables (remove this after debugging)
 console.log('=== ENVIRONMENT VARIABLES DEBUG ===');
+console.log('Deployment timestamp:', new Date().toISOString());
 console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
 console.log('GOOGLE_CLIENT_ID length:', process.env.GOOGLE_CLIENT_ID?.length || 0);
+console.log('GOOGLE_CLIENT_ID first 10 chars:', process.env.GOOGLE_CLIENT_ID?.substring(0, 10) || 'NOT SET');
 console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
 console.log('GOOGLE_CLIENT_SECRET length:', process.env.GOOGLE_CLIENT_SECRET?.length || 0);
 console.log('SESSION_SECRET exists:', !!process.env.SESSION_SECRET);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
+console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('GOOGLE') || k.includes('SESSION')));
 console.log('=================================');
 
 app.use(express.json());
 app.use(express.static('dist'));
 
+// Get environment variables with fallback
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+
+console.log('Checking OAuth config...');
+console.log('Client ID check:', GOOGLE_CLIENT_ID ? `Found (${GOOGLE_CLIENT_ID.length} chars)` : 'Missing');
+console.log('Client Secret check:', GOOGLE_CLIENT_SECRET ? `Found (${GOOGLE_CLIENT_SECRET.length} chars)` : 'Missing');
+
 // Only configure Google OAuth if credentials are provided
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
   // Determine the callback URL based on environment
   const callbackURL = process.env.NODE_ENV === 'production' 
     ? 'https://haba-production.up.railway.app/auth/google/callback'
     : '/auth/google/callback';
   
-  console.log('OAuth Strategy configured with callback:', callbackURL);
+  console.log('✅ OAuth Strategy configured with callback:', callbackURL);
   
   passport.use(new GoogleStrategy({
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
       callbackURL: callbackURL
     },
     function(accessToken, refreshToken, profile, done) {
@@ -40,7 +51,8 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     }
   ));
 } else {
-  console.warn('⚠️  Google OAuth not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.');
+  console.error('❌ Google OAuth not configured!');
+  console.error('Missing:', !GOOGLE_CLIENT_ID ? 'GOOGLE_CLIENT_ID' : '', !GOOGLE_CLIENT_SECRET ? 'GOOGLE_CLIENT_SECRET' : '');
 }
 
 passport.serializeUser(function(user, done) {
@@ -114,17 +126,25 @@ app.post('/api/ai/chat', ensureAuth, (req, res) => {
 
 // Auth routes - only enable if OAuth is configured
 app.get('/auth/google', (req, res, next) => {
-  if (!process.env.GOOGLE_CLIENT_ID) {
+  console.log('Auth request received, checking credentials...');
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    console.error('Auth failed - missing credentials');
     return res.status(503).json({ 
       error: 'Google OAuth not configured', 
-      message: 'Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables' 
+      message: 'Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables',
+      debug: {
+        hasClientId: !!GOOGLE_CLIENT_ID,
+        hasClientSecret: !!GOOGLE_CLIENT_SECRET
+      }
     });
   }
+  console.log('Redirecting to Google OAuth...');
   passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
 });
 
 app.get('/auth/google/callback', (req, res, next) => {
-  if (!process.env.GOOGLE_CLIENT_ID) {
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    console.error('Callback failed - missing credentials');
     return res.redirect('/');
   }
   passport.authenticate('google', { failureRedirect: '/' })(req, res, next);
