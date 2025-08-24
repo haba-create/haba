@@ -10,15 +10,20 @@ const app = express();
 app.use(express.json());
 app.use(express.static('dist'));
 
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/auth/google/callback'
-  },
-  function(accessToken, refreshToken, profile, done) {
-    return done(null, profile);
-  }
-));
+// Only configure Google OAuth if credentials are provided
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: '/auth/google/callback'
+    },
+    function(accessToken, refreshToken, profile, done) {
+      return done(null, profile);
+    }
+  ));
+} else {
+  console.warn('⚠️  Google OAuth not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables.');
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -89,13 +94,25 @@ app.post('/api/ai/chat', ensureAuth, (req, res) => {
   });
 });
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/dashboard');
+// Auth routes - only enable if OAuth is configured
+app.get('/auth/google', (req, res, next) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    return res.status(503).json({ 
+      error: 'Google OAuth not configured', 
+      message: 'Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables' 
+    });
   }
-);
+  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
+
+app.get('/auth/google/callback', (req, res, next) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    return res.redirect('/');
+  }
+  passport.authenticate('google', { failureRedirect: '/' })(req, res, next);
+}, function(req, res) {
+  res.redirect('/dashboard');
+});
 
 app.get('/logout', (req, res) => {
   req.logout(() => {
