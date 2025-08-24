@@ -8,22 +8,32 @@ require('dotenv').config();
 const app = express();
 
 // Debug: Log environment variables (remove this after debugging)
-console.log('Environment check:', {
-  hasClientId: !!process.env.GOOGLE_CLIENT_ID,
-  hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
-  hasSessionSecret: !!process.env.SESSION_SECRET,
-  nodeEnv: process.env.NODE_ENV
-});
+console.log('=== ENVIRONMENT VARIABLES DEBUG ===');
+console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
+console.log('GOOGLE_CLIENT_ID length:', process.env.GOOGLE_CLIENT_ID?.length || 0);
+console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
+console.log('GOOGLE_CLIENT_SECRET length:', process.env.GOOGLE_CLIENT_SECRET?.length || 0);
+console.log('SESSION_SECRET exists:', !!process.env.SESSION_SECRET);
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('PORT:', process.env.PORT);
+console.log('=================================');
 
 app.use(express.json());
 app.use(express.static('dist'));
 
 // Only configure Google OAuth if credentials are provided
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  // Determine the callback URL based on environment
+  const callbackURL = process.env.NODE_ENV === 'production' 
+    ? 'https://haba-production.up.railway.app/auth/google/callback'
+    : '/auth/google/callback';
+  
+  console.log('OAuth Strategy configured with callback:', callbackURL);
+  
   passport.use(new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/auth/google/callback'
+      callbackURL: callbackURL
     },
     function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
