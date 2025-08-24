@@ -9,7 +9,7 @@ const LandingPage = () => {
   const navigate = useNavigate()
 
   const handleLogin = () => {
-    window.location.href = '/auth/google'
+    navigate('/login')
   }
 
   if (user) {

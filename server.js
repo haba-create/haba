@@ -1,64 +1,54 @@
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
+const bcrypt = require('bcryptjs');
 const path = require('path');
 require('dotenv').config();
 
 const app = express();
 
-// Debug: Log environment variables (remove this after debugging)
-console.log('=== ENVIRONMENT VARIABLES DEBUG ===');
-console.log('Deployment timestamp:', new Date().toISOString());
-console.log('GOOGLE_CLIENT_ID exists:', !!process.env.GOOGLE_CLIENT_ID);
-console.log('GOOGLE_CLIENT_ID length:', process.env.GOOGLE_CLIENT_ID?.length || 0);
-console.log('GOOGLE_CLIENT_ID first 10 chars:', process.env.GOOGLE_CLIENT_ID?.substring(0, 10) || 'NOT SET');
-console.log('GOOGLE_CLIENT_SECRET exists:', !!process.env.GOOGLE_CLIENT_SECRET);
-console.log('GOOGLE_CLIENT_SECRET length:', process.env.GOOGLE_CLIENT_SECRET?.length || 0);
-console.log('SESSION_SECRET exists:', !!process.env.SESSION_SECRET);
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', process.env.PORT);
-console.log('All env keys:', Object.keys(process.env).filter(k => k.includes('GOOGLE') || k.includes('SESSION')));
-console.log('=================================');
-
 app.use(express.json());
 app.use(express.static('dist'));
 
-// Get environment variables with fallback
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
-const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+// Simple in-memory user store (in production, use a database)
+const users = [
+  {
+    id: 1,
+    username: 'stephen',
+    password: bcrypt.hashSync('haba2024', 10),
+    displayName: 'Stephen',
+    email: 'stephen@haba.io'
+  }
+];
 
-console.log('Checking OAuth config...');
-console.log('Client ID check:', GOOGLE_CLIENT_ID ? `Found (${GOOGLE_CLIENT_ID.length} chars)` : 'Missing');
-console.log('Client Secret check:', GOOGLE_CLIENT_SECRET ? `Found (${GOOGLE_CLIENT_SECRET.length} chars)` : 'Missing');
-
-// Only configure Google OAuth if credentials are provided
-if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET) {
-  // Determine the callback URL based on environment
-  const callbackURL = process.env.NODE_ENV === 'production' 
-    ? 'https://haba-production.up.railway.app/auth/google/callback'
-    : '/auth/google/callback';
-  
-  console.log('✅ OAuth Strategy configured with callback:', callbackURL);
-  
-  passport.use(new GoogleStrategy({
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: callbackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-      return done(null, profile);
+// Configure passport local strategy
+passport.use(new LocalStrategy(
+  async function(username, password, done) {
+    try {
+      const user = users.find(u => u.username === username);
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      
+      const isValid = await bcrypt.compare(password, user.password);
+      if (!isValid) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      
+      return done(null, user);
+    } catch (error) {
+      return done(error);
     }
-  ));
-} else {
-  console.error('❌ Google OAuth not configured!');
-  console.error('Missing:', !GOOGLE_CLIENT_ID ? 'GOOGLE_CLIENT_ID' : '', !GOOGLE_CLIENT_SECRET ? 'GOOGLE_CLIENT_SECRET' : '');
-}
+  }
+));
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.id);
 });
-passport.deserializeUser(function(user, done) {
+
+passport.deserializeUser(function(id, done) {
+  const user = users.find(u => u.id === id);
   done(null, user);
 });
 
@@ -72,7 +62,7 @@ app.use(passport.session());
 
 function ensureAuth(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/');
+  res.status(401).json({ error: 'Unauthorized' });
 }
 
 // API Routes
@@ -82,19 +72,19 @@ app.get('/api/auth/check', (req, res) => {
       authenticated: true, 
       user: {
         displayName: req.user.displayName,
-        email: req.user.emails?.[0]?.value || req.user.email
+        email: req.user.email
       }
     });
   } else {
-    res.status(401).json({ authenticated: false });
+    res.json({ authenticated: false });
   }
 });
 
 app.get('/api/user', ensureAuth, (req, res) => {
   res.json({
     displayName: req.user.displayName,
-    email: req.user.emails?.[0]?.value || req.user.email,
-    photo: req.user.photos?.[0]?.value
+    email: req.user.email,
+    photo: req.user.photo
   });
 });
 
@@ -124,37 +114,56 @@ app.post('/api/ai/chat', ensureAuth, (req, res) => {
   });
 });
 
-// Auth routes - only enable if OAuth is configured
-app.get('/auth/google', (req, res, next) => {
-  console.log('Auth request received, checking credentials...');
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-    console.error('Auth failed - missing credentials');
-    return res.status(503).json({ 
-      error: 'Google OAuth not configured', 
-      message: 'Please set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET environment variables',
-      debug: {
-        hasClientId: !!GOOGLE_CLIENT_ID,
-        hasClientSecret: !!GOOGLE_CLIENT_SECRET
+// Auth routes
+app.post('/api/auth/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return res.status(500).json({ error: 'Authentication error' });
+    }
+    if (!user) {
+      return res.status(401).json({ error: info.message || 'Invalid credentials' });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Login failed' });
       }
+      return res.json({ 
+        success: true, 
+        user: {
+          displayName: user.displayName,
+          email: user.email
+        }
+      });
     });
-  }
-  console.log('Redirecting to Google OAuth...');
-  passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+  })(req, res, next);
 });
 
-app.get('/auth/google/callback', (req, res, next) => {
-  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-    console.error('Callback failed - missing credentials');
-    return res.redirect('/');
+app.post('/api/auth/register', async (req, res) => {
+  const { username, password, email, displayName } = req.body;
+  
+  // Check if user exists
+  if (users.find(u => u.username === username)) {
+    return res.status(400).json({ error: 'Username already exists' });
   }
-  passport.authenticate('google', { failureRedirect: '/' })(req, res, next);
-}, function(req, res) {
-  res.redirect('/dashboard');
+  
+  // Create new user
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = {
+    id: users.length + 1,
+    username,
+    password: hashedPassword,
+    email,
+    displayName: displayName || username
+  };
+  
+  users.push(newUser);
+  
+  res.json({ success: true, message: 'User registered successfully' });
 });
 
-app.get('/logout', (req, res) => {
+app.post('/api/auth/logout', (req, res) => {
   req.logout(() => {
-    res.redirect('/');
+    res.json({ success: true });
   });
 });
 
@@ -164,4 +173,7 @@ app.get('*', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log('Login credentials: username=stephen, password=haba2024');
+});

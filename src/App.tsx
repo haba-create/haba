@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import LandingPage from './pages/LandingPage'
+import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import DocumentGenerator from './pages/DocumentGenerator'
 import AIAssistants from './pages/AIAssistants'
@@ -22,7 +23,9 @@ function App() {
   const checkAuth = async () => {
     try {
       const response = await axios.get('/api/auth/check', { withCredentials: true })
-      setUser(response.data.user)
+      if (response.data.authenticated) {
+        setUser(response.data.user)
+      }
     } catch (error) {
       console.log('Not authenticated')
     } finally {
@@ -43,8 +46,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
           <Route path="/dashboard" element={
-            user ? <DashboardLayout /> : <Navigate to="/" />
+            user ? <DashboardLayout /> : <Navigate to="/login" />
           }>
             <Route index element={<Dashboard />} />
             <Route path="documents" element={<DocumentGenerator />} />

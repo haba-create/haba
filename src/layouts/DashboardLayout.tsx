@@ -20,8 +20,18 @@ const DashboardLayout = () => {
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const handleLogout = () => {
-    window.location.href = '/logout'
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      if (response.ok) {
+        window.location.href = '/'
+      }
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
   }
 
   const menuItems = [
