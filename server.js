@@ -7,6 +7,14 @@ require('dotenv').config();
 
 const app = express();
 
+// Debug: Log environment variables (remove this after debugging)
+console.log('Environment check:', {
+  hasClientId: !!process.env.GOOGLE_CLIENT_ID,
+  hasClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+  hasSessionSecret: !!process.env.SESSION_SECRET,
+  nodeEnv: process.env.NODE_ENV
+});
+
 app.use(express.json());
 app.use(express.static('dist'));
 
