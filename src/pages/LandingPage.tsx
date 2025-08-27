@@ -132,11 +132,11 @@ const LandingPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-2xl md:text-3xl font-light text-gray-300 mb-6"
+            className="text-2xl md:text-3xl font-extralight text-gray-300 mb-6 tracking-wide"
           >
             Data & AI Architecture
-            <span className="block text-xl md:text-2xl mt-2 text-gray-400">
-              Transforming Business Through Intelligence
+            <span className="block text-lg md:text-xl mt-3 text-gray-500 font-light">
+              Strategic Intelligence Solutions
             </span>
           </motion.p>
 
@@ -145,36 +145,44 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="max-w-3xl mx-auto mb-12"
+            className="max-w-2xl mx-auto mb-16"
           >
-            <p className="text-lg text-gray-400 leading-relaxed">
-              Expert consultancy helping enterprises leverage cutting-edge data infrastructure 
-              and artificial intelligence to drive innovation, optimize operations, and unlock 
-              unprecedented growth potential.
+            <p className="text-base text-gray-500 leading-relaxed font-light">
+              Architecting intelligent systems that transform enterprise data into competitive advantage.
+              We design, build, and scale AI-driven solutions for tomorrow's challenges.
             </p>
           </motion.div>
 
-          {/* Feature Cards */}
+          {/* Feature Cards - Abstract Design */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 max-w-4xl mx-auto"
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 max-w-5xl mx-auto"
           >
-            <div className="glass rounded-2xl p-6 border border-purple-500/20 hover:border-purple-400/40 transition-all">
-              <Brain className="w-10 h-10 text-purple-400 mb-3" />
-              <h3 className="text-lg font-semibold mb-2">AI Strategy</h3>
-              <p className="text-sm text-gray-400">Custom AI solutions tailored to your business needs</p>
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-purple-600/5 rounded-xl blur-xl group-hover:blur-2xl transition-all" />
+              <div className="relative glass rounded-xl p-8 border border-white/5 hover:border-purple-500/20 transition-all">
+                <Brain className="w-8 h-8 text-purple-400/60 mb-4" />
+                <h3 className="text-base font-light mb-2 text-gray-300">Intelligence</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">AI-first architecture design</p>
+              </div>
             </div>
-            <div className="glass rounded-2xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all">
-              <Database className="w-10 h-10 text-cyan-400 mb-3" />
-              <h3 className="text-lg font-semibold mb-2">Data Architecture</h3>
-              <p className="text-sm text-gray-400">Scalable infrastructure for modern data operations</p>
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/10 to-cyan-600/5 rounded-xl blur-xl group-hover:blur-2xl transition-all" />
+              <div className="relative glass rounded-xl p-8 border border-white/5 hover:border-cyan-500/20 transition-all">
+                <Database className="w-8 h-8 text-cyan-400/60 mb-4" />
+                <h3 className="text-base font-light mb-2 text-gray-300">Infrastructure</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">Scalable data ecosystems</p>
+              </div>
             </div>
-            <div className="glass rounded-2xl p-6 border border-blue-500/20 hover:border-blue-400/40 transition-all">
-              <Sparkles className="w-10 h-10 text-blue-400 mb-3" />
-              <h3 className="text-lg font-semibold mb-2">Innovation</h3>
-              <p className="text-sm text-gray-400">Cutting-edge solutions for competitive advantage</p>
+            <div className="group relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-blue-600/5 rounded-xl blur-xl group-hover:blur-2xl transition-all" />
+              <div className="relative glass rounded-xl p-8 border border-white/5 hover:border-blue-500/20 transition-all">
+                <Sparkles className="w-8 h-8 text-blue-400/60 mb-4" />
+                <h3 className="text-base font-light mb-2 text-gray-300">Innovation</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">Next-generation solutions</p>
+              </div>
             </div>
           </motion.div>
 
@@ -186,25 +194,89 @@ const LandingPage = () => {
           >
             <button
               onClick={handleLogin}
-              className="group relative inline-flex items-center gap-3 px-8 py-4 overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold text-lg shadow-2xl transition-all hover:scale-105 hover:shadow-purple-500/25"
+              className="group relative inline-flex items-center gap-3 px-10 py-4 overflow-hidden rounded-full border border-white/10 text-white font-light text-base transition-all hover:border-white/20 hover:bg-white/5"
             >
-              <span className="relative z-10">Access Dashboard</span>
-              <ArrowRight className="relative z-10 w-5 h-5 transition-transform group-hover:translate-x-1" />
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 transition-opacity group-hover:opacity-100" />
+              <span className="relative z-10">Enter Platform</span>
+              <ArrowRight className="relative z-10 w-4 h-4 transition-transform group-hover:translate-x-1" />
             </button>
           </motion.div>
 
-          {/* Client Badges */}
+          {/* Client Trust Section - Abstract and Discreet */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.2 }}
-            className="mt-16"
+            className="mt-20"
           >
-            <p className="text-sm text-gray-500 mb-4">Trusted by industry leaders</p>
-            <div className="flex items-center justify-center gap-8">
-              <div className="text-gray-600 font-semibold text-xl">Marlink</div>
-              <div className="text-gray-600 font-semibold text-xl">AllianzGI</div>
+            <p className="text-xs uppercase tracking-widest text-gray-500 mb-8">Trusted Partners</p>
+            <div className="max-w-5xl mx-auto">
+              <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60">
+                {/* Government & Public Sector */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">NHS</span>
+                </motion.div>
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">Home Office</span>
+                </motion.div>
+                
+                {/* Media & Communications */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">BBC</span>
+                </motion.div>
+                
+                {/* Professional Services */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">RGA</span>
+                </motion.div>
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">Capita</span>
+                </motion.div>
+                
+                {/* Financial Services */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">Howden Group</span>
+                </motion.div>
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">AllianzGI</span>
+                </motion.div>
+                
+                {/* Technology & Maritime */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light tracking-wide">Marlink</span>
+                </motion.div>
+                
+                {/* Startups Indicator */}
+                <motion.div
+                  whileHover={{ opacity: 1 }}
+                  className="group"
+                >
+                  <span className="text-gray-400 text-sm font-light italic">+ Innovative Startups</span>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         </motion.div>

@@ -4,33 +4,83 @@ import { Users, Plus, Mail, Phone, Globe, Calendar, DollarSign, TrendingUp } fro
 const Clients = () => {
   const clients = [
     {
-      id: 'marlink',
-      name: 'Marlink',
-      logo: '🚢',
-      industry: 'Maritime Communications',
-      contact: 'John Andersson',
-      email: 'john.andersson@marlink.com',
-      phone: '+33 1 70 48 98 00',
-      website: 'www.marlink.com',
+      id: 'rga',
+      name: 'RGA',
+      initial: 'R',
+      industry: 'Reinsurance',
+      sector: 'Financial Services',
       status: 'active',
-      projects: 5,
-      revenue: '$450,000',
-      lastContact: '2 days ago'
+      engagement: 'Strategic Partnership'
+    },
+    {
+      id: 'bbc',
+      name: 'BBC',
+      initial: 'B',
+      industry: 'Media & Broadcasting',
+      sector: 'Media',
+      status: 'active',
+      engagement: 'Digital Transformation'
+    },
+    {
+      id: 'nhs',
+      name: 'NHS',
+      initial: 'N',
+      industry: 'Healthcare',
+      sector: 'Public Sector',
+      status: 'active',
+      engagement: 'Data Architecture'
+    },
+    {
+      id: 'home-office',
+      name: 'Home Office',
+      initial: 'H',
+      industry: 'Government',
+      sector: 'Public Sector',
+      status: 'active',
+      engagement: 'AI Implementation'
+    },
+    {
+      id: 'capita',
+      name: 'Capita',
+      initial: 'C',
+      industry: 'Business Services',
+      sector: 'Professional Services',
+      status: 'active',
+      engagement: 'Digital Strategy'
+    },
+    {
+      id: 'howden',
+      name: 'Howden Group',
+      initial: 'H',
+      industry: 'Insurance Brokerage',
+      sector: 'Financial Services',
+      status: 'active',
+      engagement: 'Data Analytics'
     },
     {
       id: 'allianzgi',
       name: 'AllianzGI',
-      logo: '🏦',
+      initial: 'A',
       industry: 'Asset Management',
-      contact: 'Sarah Mitchell',
-      email: 'sarah.mitchell@allianzgi.com',
-      phone: '+49 69 263 0',
-      website: 'www.allianzgi.com',
+      sector: 'Financial Services',
       status: 'active',
-      projects: 3,
-      revenue: '$320,000',
-      lastContact: '1 week ago'
+      engagement: 'Intelligence Platform'
+    },
+    {
+      id: 'marlink',
+      name: 'Marlink',
+      initial: 'M',
+      industry: 'Maritime Communications',
+      sector: 'Technology',
+      status: 'active',
+      engagement: 'IoT Integration'
     }
+  ]
+  
+  const startupClients = [
+    { id: 's1', name: 'Series A FinTech', sector: 'Financial Technology' },
+    { id: 's2', name: 'Series B HealthTech', sector: 'Healthcare Technology' },
+    { id: 's3', name: 'Seed Stage AI', sector: 'Artificial Intelligence' }
   ]
 
   return (
@@ -52,114 +102,106 @@ const Clients = () => {
         </button>
       </motion.div>
 
-      {/* Client Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* Client Grid - Professional & Abstract */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {clients.map((client, index) => (
           <motion.div
             key={client.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="glass rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all"
+            transition={{ duration: 0.5, delay: index * 0.05 }}
+            className="group relative"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-4">
-                <div className="text-5xl">{client.logo}</div>
-                <div>
-                  <h3 className="text-xl font-semibold text-white">{client.name}</h3>
-                  <p className="text-sm text-gray-400">{client.industry}</p>
-                </div>
+            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative glass rounded-xl p-6 border border-white/5 hover:border-white/10 transition-all">
+              <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/10 to-blue-500/10 mb-4">
+                <span className="text-lg font-light text-gray-300">{client.initial}</span>
               </div>
-              <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                client.status === 'active' 
-                  ? 'bg-green-500/20 text-green-400' 
-                  : 'bg-yellow-500/20 text-yellow-400'
-              }`}>
-                {client.status}
-              </span>
-            </div>
-
-            <div className="space-y-3 mb-4">
-              <div className="flex items-center gap-3 text-sm">
-                <Users className="w-4 h-4 text-gray-500" />
-                <span className="text-gray-400">Contact:</span>
-                <span className="text-white">{client.contact}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Mail className="w-4 h-4 text-gray-500" />
-                <span className="text-gray-400">Email:</span>
-                <span className="text-white">{client.email}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Phone className="w-4 h-4 text-gray-500" />
-                <span className="text-gray-400">Phone:</span>
-                <span className="text-white">{client.phone}</span>
-              </div>
-              <div className="flex items-center gap-3 text-sm">
-                <Globe className="w-4 h-4 text-gray-500" />
-                <span className="text-gray-400">Website:</span>
-                <span className="text-white">{client.website}</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/10">
-              <div className="text-center">
-                <p className="text-2xl font-bold text-white">{client.projects}</p>
-                <p className="text-xs text-gray-400">Projects</p>
-              </div>
-              <div className="text-center">
-                <p className="text-2xl font-bold text-green-400">{client.revenue}</p>
-                <p className="text-xs text-gray-400">Revenue</p>
-              </div>
-              <div className="text-center">
-                <p className="text-sm font-medium text-white">{client.lastContact}</p>
-                <p className="text-xs text-gray-400">Last Contact</p>
+              <h3 className="text-sm font-normal text-white mb-1">{client.name}</h3>
+              <p className="text-xs text-gray-500 mb-3">{client.sector}</p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-600">{client.engagement}</span>
+                <div className="w-2 h-2 rounded-full bg-green-500/50"></div>
               </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Stats Overview */}
+      {/* Startup Portfolio */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="glass rounded-2xl p-6 border border-white/10"
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="glass rounded-2xl p-6 border border-white/5 mb-8"
       >
-        <h2 className="text-xl font-semibold text-white mb-6">Client Performance</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Users className="w-5 h-5 text-purple-400" />
-              <span className="text-sm text-gray-400">Total Clients</span>
+        <h2 className="text-lg font-light text-white mb-4">Startup Portfolio</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {startupClients.map((startup, index) => (
+            <div key={startup.id} className="flex items-center justify-between p-3 rounded-lg bg-white/5">
+              <div>
+                <p className="text-sm text-gray-300">{startup.name}</p>
+                <p className="text-xs text-gray-500">{startup.sector}</p>
+              </div>
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-500/50"></div>
             </div>
-            <p className="text-3xl font-bold text-white">8</p>
-            <p className="text-xs text-green-400 mt-1">+2 this quarter</p>
+          ))}
+        </div>
+        <p className="text-xs text-gray-600 mt-4 italic">+ Additional early-stage ventures</p>
+      </motion.div>
+
+      {/* Performance Metrics - Abstract Design */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+        className="glass rounded-2xl p-8 border border-white/5"
+      >
+        <h2 className="text-base font-light text-gray-400 mb-8 uppercase tracking-wider">Performance Metrics</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent rounded-lg" />
+            <div className="relative">
+              <p className="text-xs text-gray-500 mb-2">Portfolio</p>
+              <p className="text-2xl font-light text-white">11</p>
+              <p className="text-xs text-gray-600 mt-1">Active Engagements</p>
+            </div>
           </div>
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <DollarSign className="w-5 h-5 text-green-400" />
-              <span className="text-sm text-gray-400">Total Revenue</span>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent rounded-lg" />
+            <div className="relative">
+              <p className="text-xs text-gray-500 mb-2">Growth</p>
+              <p className="text-2xl font-light text-white">+22%</p>
+              <p className="text-xs text-gray-600 mt-1">Year over Year</p>
             </div>
-            <p className="text-3xl font-bold text-white">$770K</p>
-            <p className="text-xs text-green-400 mt-1">+15% YoY</p>
           </div>
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <TrendingUp className="w-5 h-5 text-blue-400" />
-              <span className="text-sm text-gray-400">Active Projects</span>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-lg" />
+            <div className="relative">
+              <p className="text-xs text-gray-500 mb-2">Delivery</p>
+              <p className="text-2xl font-light text-white">98%</p>
+              <p className="text-xs text-gray-600 mt-1">Success Rate</p>
             </div>
-            <p className="text-3xl font-bold text-white">12</p>
-            <p className="text-xs text-blue-400 mt-1">8 in progress</p>
           </div>
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <Calendar className="w-5 h-5 text-cyan-400" />
-              <span className="text-sm text-gray-400">Avg. Retention</span>
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-lg" />
+            <div className="relative">
+              <p className="text-xs text-gray-500 mb-2">Retention</p>
+              <p className="text-2xl font-light text-white">3.2yr</p>
+              <p className="text-xs text-gray-600 mt-1">Average Duration</p>
             </div>
-            <p className="text-3xl font-bold text-white">2.3yr</p>
-            <p className="text-xs text-cyan-400 mt-1">Above industry avg</p>
+          </div>
+        </div>
+        
+        {/* Sectors Distribution */}
+        <div className="mt-8 pt-8 border-t border-white/5">
+          <p className="text-xs text-gray-500 mb-4">Sector Distribution</p>
+          <div className="flex flex-wrap gap-2">
+            <span className="px-3 py-1 rounded-full text-xs bg-white/5 text-gray-400">Financial Services 35%</span>
+            <span className="px-3 py-1 rounded-full text-xs bg-white/5 text-gray-400">Public Sector 25%</span>
+            <span className="px-3 py-1 rounded-full text-xs bg-white/5 text-gray-400">Technology 20%</span>
+            <span className="px-3 py-1 rounded-full text-xs bg-white/5 text-gray-400">Media 10%</span>
+            <span className="px-3 py-1 rounded-full text-xs bg-white/5 text-gray-400">Startups 10%</span>
           </div>
         </div>
       </motion.div>
