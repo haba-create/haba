@@ -1,0 +1,262 @@
+{
+  "name": "High-Level Design (HLD) Template",
+  "version": "1.0.0",
+  "type": "HLD",
+  "sections": [
+    {
+      "id": "executive_summary",
+      "title": "Executive Summary",
+      "required": true,
+      "prompts": [
+        "What is the primary business objective?",
+        "What are the key deliverables?",
+        "What is the expected timeline?",
+        "What are the success criteria?"
+      ],
+      "guidelines": "Provide a concise overview suitable for C-level executives, focusing on business value and strategic alignment."
+    },
+    {
+      "id": "system_overview",
+      "title": "System Architecture Overview",
+      "required": true,
+      "subsections": [
+        {
+          "id": "architecture_principles",
+          "title": "Architecture Principles",
+          "prompts": [
+            "What architectural patterns will be used?",
+            "What are the key design principles?",
+            "How does this align with enterprise architecture?"
+          ]
+        },
+        {
+          "id": "system_context",
+          "title": "System Context",
+          "prompts": [
+            "What are the system boundaries?",
+            "Who are the primary stakeholders?",
+            "What are the external dependencies?"
+          ]
+        }
+      ],
+      "diagrams": ["C4_Context", "System_Landscape"]
+    },
+    {
+      "id": "component_architecture",
+      "title": "Component Architecture",
+      "required": true,
+      "subsections": [
+        {
+          "id": "core_components",
+          "title": "Core Components",
+          "prompts": [
+            "What are the main system components?",
+            "What are their responsibilities?",
+            "How do they interact?"
+          ]
+        },
+        {
+          "id": "data_flow",
+          "title": "Data Flow",
+          "prompts": [
+            "How does data flow through the system?",
+            "What are the data transformation points?",
+            "What are the data retention policies?"
+          ]
+        }
+      ],
+      "diagrams": ["Component_Diagram", "Data_Flow_Diagram"]
+    },
+    {
+      "id": "technology_stack",
+      "title": "Technology Stack",
+      "required": true,
+      "subsections": [
+        {
+          "id": "platform_technologies",
+          "title": "Platform Technologies",
+          "categories": [
+            "Programming Languages",
+            "Frameworks",
+            "Databases",
+            "Message Queues",
+            "Caching Solutions"
+          ]
+        },
+        {
+          "id": "infrastructure",
+          "title": "Infrastructure",
+          "categories": [
+            "Cloud Provider",
+            "Container Orchestration",
+            "CI/CD Tools",
+            "Monitoring Solutions"
+          ]
+        }
+      ],
+      "validation": "Ensure all technology choices are justified with rationale"
+    },
+    {
+      "id": "integration_architecture",
+      "title": "Integration Architecture",
+      "required": true,
+      "subsections": [
+        {
+          "id": "external_integrations",
+          "title": "External System Integrations",
+          "prompts": [
+            "What external systems will be integrated?",
+            "What integration patterns will be used?",
+            "What are the API contracts?"
+          ]
+        },
+        {
+          "id": "integration_security",
+          "title": "Integration Security",
+          "prompts": [
+            "How will integrations be secured?",
+            "What authentication methods will be used?",
+            "How will data be encrypted in transit?"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "security_architecture",
+      "title": "Security Architecture",
+      "required": true,
+      "subsections": [
+        {
+          "id": "security_principles",
+          "title": "Security Principles",
+          "standards": ["OWASP", "ISO_27001", "NIST"]
+        },
+        {
+          "id": "threat_model",
+          "title": "Threat Model",
+          "prompts": [
+            "What are the potential threats?",
+            "What are the attack vectors?",
+            "What are the mitigation strategies?"
+          ]
+        },
+        {
+          "id": "compliance",
+          "title": "Compliance Requirements",
+          "categories": ["GDPR", "HIPAA", "PCI-DSS", "SOC2"]
+        }
+      ]
+    },
+    {
+      "id": "deployment_architecture",
+      "title": "Deployment Architecture",
+      "required": true,
+      "subsections": [
+        {
+          "id": "deployment_topology",
+          "title": "Deployment Topology",
+          "environments": ["Development", "Staging", "Production", "DR"]
+        },
+        {
+          "id": "scalability_strategy",
+          "title": "Scalability Strategy",
+          "prompts": [
+            "What are the scalability requirements?",
+            "How will horizontal scaling be achieved?",
+            "What are the auto-scaling triggers?"
+          ]
+        }
+      ],
+      "diagrams": ["Deployment_Diagram", "Network_Topology"]
+    },
+    {
+      "id": "performance_requirements",
+      "title": "Performance & Scalability",
+      "required": true,
+      "metrics": [
+        {
+          "name": "Response Time",
+          "target": "< 200ms for 95th percentile"
+        },
+        {
+          "name": "Throughput",
+          "target": "10,000 requests per second"
+        },
+        {
+          "name": "Availability",
+          "target": "99.99% uptime"
+        },
+        {
+          "name": "Data Volume",
+          "target": "Support for 100TB+ data"
+        }
+      ]
+    },
+    {
+      "id": "risk_assessment",
+      "title": "Risk Assessment",
+      "required": true,
+      "risk_categories": [
+        {
+          "category": "Technical Risks",
+          "examples": ["Technology obsolescence", "Integration complexity", "Performance bottlenecks"]
+        },
+        {
+          "category": "Business Risks",
+          "examples": ["Budget overrun", "Timeline delays", "Scope creep"]
+        },
+        {
+          "category": "Operational Risks",
+          "examples": ["Skill gaps", "Vendor dependencies", "Change management"]
+        }
+      ],
+      "risk_matrix": {
+        "impact_levels": ["Low", "Medium", "High", "Critical"],
+        "probability_levels": ["Unlikely", "Possible", "Likely", "Almost Certain"]
+      }
+    },
+    {
+      "id": "appendices",
+      "title": "Appendices",
+      "required": false,
+      "subsections": [
+        {
+          "id": "glossary",
+          "title": "Glossary",
+          "description": "Define all technical terms and acronyms"
+        },
+        {
+          "id": "references",
+          "title": "References",
+          "description": "List all referenced documents and standards"
+        },
+        {
+          "id": "revision_history",
+          "title": "Revision History",
+          "auto_generated": true
+        }
+      ]
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule": "all_required_sections_present",
+      "description": "All sections marked as required must be present"
+    },
+    {
+      "rule": "diagrams_included",
+      "description": "At least one diagram per major section"
+    },
+    {
+      "rule": "standards_compliance",
+      "description": "Document must comply with IEEE 42010 and TOGAF standards"
+    }
+  ],
+  "metadata": {
+    "created_by": "HABA Document System",
+    "last_updated": "2024-01-20",
+    "review_cycle": "quarterly",
+    "approval_required": true,
+    "minimum_reviewers": 2
+  }
+}

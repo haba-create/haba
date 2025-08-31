@@ -1,0 +1,429 @@
+{
+  "name": "Low-Level Design (LLD) Template",
+  "version": "1.0.0",
+  "type": "LLD",
+  "sections": [
+    {
+      "id": "introduction",
+      "title": "Introduction",
+      "required": true,
+      "subsections": [
+        {
+          "id": "document_purpose",
+          "title": "Document Purpose",
+          "description": "Define the scope and objectives of this LLD"
+        },
+        {
+          "id": "intended_audience",
+          "title": "Intended Audience",
+          "audiences": ["Developers", "Technical Architects", "DevOps Engineers", "QA Engineers"]
+        },
+        {
+          "id": "reference_documents",
+          "title": "Reference Documents",
+          "references": ["HLD Document", "Requirements Specification", "API Standards"]
+        }
+      ]
+    },
+    {
+      "id": "detailed_design",
+      "title": "Detailed System Design",
+      "required": true,
+      "subsections": [
+        {
+          "id": "component_specifications",
+          "title": "Component Specifications",
+          "component_details": {
+            "name": "Component Name",
+            "purpose": "Component Purpose",
+            "interfaces": "Public Interfaces",
+            "dependencies": "External Dependencies",
+            "configuration": "Configuration Parameters",
+            "error_handling": "Error Handling Strategy"
+          }
+        },
+        {
+          "id": "class_design",
+          "title": "Class Design",
+          "diagrams": ["Class_Diagram", "Package_Diagram"],
+          "specifications": {
+            "design_patterns": ["Singleton", "Factory", "Observer", "Strategy"],
+            "class_responsibilities": "Single Responsibility Principle adherence",
+            "inheritance_hierarchy": "Class inheritance structure"
+          }
+        },
+        {
+          "id": "module_interactions",
+          "title": "Module Interactions",
+          "interaction_types": ["Synchronous", "Asynchronous", "Event-Driven", "Batch"],
+          "diagrams": ["Sequence_Diagram", "Communication_Diagram"]
+        }
+      ]
+    },
+    {
+      "id": "api_specifications",
+      "title": "API Specifications",
+      "required": true,
+      "subsections": [
+        {
+          "id": "rest_apis",
+          "title": "REST API Endpoints",
+          "specification_format": "OpenAPI 3.0",
+          "endpoint_template": {
+            "path": "/api/v1/resource",
+            "method": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+            "request": {
+              "headers": "Required headers",
+              "parameters": "Query and path parameters",
+              "body": "Request body schema"
+            },
+            "response": {
+              "success_codes": ["200", "201", "204"],
+              "error_codes": ["400", "401", "403", "404", "500"],
+              "schema": "Response body schema"
+            },
+            "authentication": "Authentication method",
+            "rate_limiting": "Rate limit specifications"
+          }
+        },
+        {
+          "id": "graphql_apis",
+          "title": "GraphQL Schema",
+          "schema_components": ["Types", "Queries", "Mutations", "Subscriptions"]
+        },
+        {
+          "id": "websocket_apis",
+          "title": "WebSocket Events",
+          "event_specifications": {
+            "event_name": "Event identifier",
+            "payload": "Event payload structure",
+            "direction": ["Client-to-Server", "Server-to-Client", "Bidirectional"]
+          }
+        }
+      ]
+    },
+    {
+      "id": "database_design",
+      "title": "Database Design",
+      "required": true,
+      "subsections": [
+        {
+          "id": "data_model",
+          "title": "Data Model",
+          "diagrams": ["ERD", "Data_Flow_Diagram"],
+          "model_components": {
+            "entities": "Entity definitions",
+            "relationships": "Entity relationships",
+            "constraints": "Data constraints and validations"
+          }
+        },
+        {
+          "id": "schema_definition",
+          "title": "Schema Definition",
+          "schema_details": {
+            "tables": "Table structures with columns and data types",
+            "indexes": "Index strategies for performance",
+            "views": "Database views and materialized views",
+            "stored_procedures": "Stored procedures and functions",
+            "triggers": "Database triggers"
+          }
+        },
+        {
+          "id": "data_migration",
+          "title": "Data Migration Strategy",
+          "migration_aspects": {
+            "versioning": "Schema versioning approach",
+            "rollback": "Rollback procedures",
+            "data_transformation": "ETL processes"
+          }
+        },
+        {
+          "id": "performance_optimization",
+          "title": "Database Performance",
+          "optimization_strategies": {
+            "query_optimization": "Query optimization techniques",
+            "partitioning": "Table partitioning strategy",
+            "caching": "Database caching layers",
+            "connection_pooling": "Connection pool configuration"
+          }
+        }
+      ]
+    },
+    {
+      "id": "implementation_details",
+      "title": "Implementation Details",
+      "required": true,
+      "subsections": [
+        {
+          "id": "algorithms",
+          "title": "Core Algorithms",
+          "algorithm_specs": {
+            "name": "Algorithm name",
+            "purpose": "What problem it solves",
+            "complexity": "Time and space complexity",
+            "pseudocode": "Algorithm pseudocode",
+            "optimization": "Optimization considerations"
+          }
+        },
+        {
+          "id": "code_structure",
+          "title": "Code Organization",
+          "structure_elements": {
+            "directory_structure": "Project directory layout",
+            "naming_conventions": "File and variable naming standards",
+            "coding_standards": "Language-specific coding standards",
+            "dependency_management": "Package management approach"
+          }
+        },
+        {
+          "id": "configuration_management",
+          "title": "Configuration Management",
+          "config_aspects": {
+            "environment_variables": "Environment-specific configurations",
+            "feature_flags": "Feature toggle implementation",
+            "secrets_management": "Handling sensitive configuration",
+            "config_validation": "Configuration validation rules"
+          }
+        }
+      ]
+    },
+    {
+      "id": "error_handling",
+      "title": "Error Handling & Logging",
+      "required": true,
+      "subsections": [
+        {
+          "id": "error_strategy",
+          "title": "Error Handling Strategy",
+          "error_types": {
+            "business_errors": "Business logic violations",
+            "technical_errors": "System and infrastructure errors",
+            "validation_errors": "Input validation failures",
+            "integration_errors": "External system failures"
+          },
+          "handling_approaches": {
+            "retry_logic": "Retry strategies with backoff",
+            "circuit_breaker": "Circuit breaker pattern",
+            "fallback": "Fallback mechanisms",
+            "error_propagation": "Error bubble-up strategy"
+          }
+        },
+        {
+          "id": "logging_strategy",
+          "title": "Logging Strategy",
+          "logging_aspects": {
+            "log_levels": ["DEBUG", "INFO", "WARN", "ERROR", "FATAL"],
+            "structured_logging": "JSON structured log format",
+            "correlation_ids": "Request tracing approach",
+            "pii_handling": "Personal data in logs",
+            "log_retention": "Log retention policies"
+          }
+        },
+        {
+          "id": "monitoring_alerts",
+          "title": "Monitoring & Alerting",
+          "monitoring_components": {
+            "metrics": "Key metrics to track",
+            "health_checks": "Service health endpoints",
+            "dashboards": "Monitoring dashboard setup",
+            "alert_rules": "Alert conditions and thresholds"
+          }
+        }
+      ]
+    },
+    {
+      "id": "security_implementation",
+      "title": "Security Implementation",
+      "required": true,
+      "subsections": [
+        {
+          "id": "authentication",
+          "title": "Authentication Implementation",
+          "auth_methods": ["OAuth 2.0", "JWT", "SAML", "API Keys"],
+          "implementation_details": {
+            "token_management": "Token generation and validation",
+            "session_management": "Session handling strategy",
+            "mfa": "Multi-factor authentication"
+          }
+        },
+        {
+          "id": "authorization",
+          "title": "Authorization Implementation",
+          "auth_models": ["RBAC", "ABAC", "ACL"],
+          "implementation": {
+            "permission_model": "Permission structure",
+            "policy_engine": "Authorization policy evaluation",
+            "resource_protection": "Resource-level security"
+          }
+        },
+        {
+          "id": "data_security",
+          "title": "Data Security",
+          "security_measures": {
+            "encryption_at_rest": "Data encryption strategy",
+            "encryption_in_transit": "TLS/SSL implementation",
+            "data_masking": "Sensitive data masking",
+            "key_management": "Encryption key management"
+          }
+        },
+        {
+          "id": "security_testing",
+          "title": "Security Testing",
+          "testing_approaches": {
+            "static_analysis": "SAST tools and configuration",
+            "dynamic_analysis": "DAST implementation",
+            "dependency_scanning": "Vulnerability scanning",
+            "penetration_testing": "Pen testing schedule"
+          }
+        }
+      ]
+    },
+    {
+      "id": "testing_strategy",
+      "title": "Testing Strategy",
+      "required": true,
+      "subsections": [
+        {
+          "id": "unit_testing",
+          "title": "Unit Testing",
+          "specifications": {
+            "coverage_target": "Minimum 80% code coverage",
+            "framework": "Testing framework used",
+            "mocking_strategy": "Mock and stub approach",
+            "test_data": "Test data management"
+          }
+        },
+        {
+          "id": "integration_testing",
+          "title": "Integration Testing",
+          "test_scenarios": {
+            "api_testing": "API integration tests",
+            "database_testing": "Database integration tests",
+            "external_services": "Third-party service mocking"
+          }
+        },
+        {
+          "id": "performance_testing",
+          "title": "Performance Testing",
+          "test_types": {
+            "load_testing": "Expected load scenarios",
+            "stress_testing": "Breaking point identification",
+            "endurance_testing": "Long-running stability tests",
+            "spike_testing": "Sudden load increase handling"
+          }
+        }
+      ]
+    },
+    {
+      "id": "deployment_procedures",
+      "title": "Deployment Procedures",
+      "required": true,
+      "subsections": [
+        {
+          "id": "build_process",
+          "title": "Build Process",
+          "build_steps": {
+            "compilation": "Code compilation steps",
+            "packaging": "Application packaging",
+            "artifact_management": "Artifact storage and versioning"
+          }
+        },
+        {
+          "id": "deployment_pipeline",
+          "title": "CI/CD Pipeline",
+          "pipeline_stages": {
+            "continuous_integration": "CI workflow",
+            "continuous_deployment": "CD workflow",
+            "rollback_procedure": "Rollback strategy",
+            "blue_green_deployment": "Zero-downtime deployment"
+          }
+        },
+        {
+          "id": "infrastructure_as_code",
+          "title": "Infrastructure as Code",
+          "iac_components": {
+            "terraform": "Terraform configurations",
+            "kubernetes": "K8s manifests",
+            "helm_charts": "Helm chart definitions",
+            "ansible": "Ansible playbooks"
+          }
+        }
+      ]
+    },
+    {
+      "id": "maintenance_operations",
+      "title": "Maintenance & Operations",
+      "required": false,
+      "subsections": [
+        {
+          "id": "operational_procedures",
+          "title": "Operational Procedures",
+          "procedures": {
+            "startup": "System startup sequence",
+            "shutdown": "Graceful shutdown procedure",
+            "backup": "Backup and restore procedures",
+            "disaster_recovery": "DR procedures"
+          }
+        },
+        {
+          "id": "troubleshooting",
+          "title": "Troubleshooting Guide",
+          "troubleshooting_items": {
+            "common_issues": "Known issues and solutions",
+            "diagnostic_tools": "Debugging tools and commands",
+            "log_analysis": "Log analysis procedures",
+            "performance_tuning": "Performance optimization steps"
+          }
+        }
+      ]
+    },
+    {
+      "id": "appendices",
+      "title": "Appendices",
+      "required": false,
+      "subsections": [
+        {
+          "id": "code_samples",
+          "title": "Code Samples",
+          "description": "Representative code examples"
+        },
+        {
+          "id": "glossary",
+          "title": "Glossary",
+          "description": "Technical terms and acronyms"
+        },
+        {
+          "id": "references",
+          "title": "References",
+          "description": "External references and documentation"
+        }
+      ]
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule": "completeness_check",
+      "description": "All required sections must be complete"
+    },
+    {
+      "rule": "code_examples",
+      "description": "Include code examples for complex implementations"
+    },
+    {
+      "rule": "diagram_inclusion",
+      "description": "Include relevant UML diagrams"
+    },
+    {
+      "rule": "api_documentation",
+      "description": "Complete API documentation in OpenAPI format"
+    }
+  ],
+  "metadata": {
+    "created_by": "HABA Document System",
+    "last_updated": "2024-01-20",
+    "review_cycle": "monthly",
+    "approval_required": true,
+    "minimum_reviewers": 3,
+    "technical_review_required": true
+  }
+}

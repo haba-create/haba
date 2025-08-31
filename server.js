@@ -88,22 +88,26 @@ app.get('/api/user', ensureAuth, (req, res) => {
   });
 });
 
-// Document API endpoints
-app.get('/api/documents', ensureAuth, (req, res) => {
-  res.json([
-    { id: 1, name: 'Marlink AI Integration Proposal', type: 'Proposal', date: '2024-01-15', status: 'sent' },
-    { id: 2, name: 'AllianzGI Q4 Progress Report', type: 'Report', date: '2024-01-10', status: 'draft' },
-  ]);
-});
+// Import Document Controller
+const DocumentController = require('./server/controllers/documentController');
+const documentController = new DocumentController();
 
-app.post('/api/documents/generate', ensureAuth, (req, res) => {
-  const { template, client, data } = req.body;
-  res.json({ 
-    success: true, 
-    documentId: Math.random().toString(36).substr(2, 9),
-    message: 'Document generated successfully' 
-  });
-});
+// Document API endpoints
+app.get('/api/documents', ensureAuth, (req, res) => documentController.listDocuments(req, res));
+app.post('/api/documents/generate', ensureAuth, (req, res) => documentController.generateDocument(req, res));
+app.get('/api/documents/:documentId', ensureAuth, (req, res) => documentController.getDocument(req, res));
+app.put('/api/documents/:documentId', ensureAuth, (req, res) => documentController.updateDocument(req, res));
+app.get('/api/documents/:documentId/compare', ensureAuth, (req, res) => documentController.compareVersions(req, res));
+app.post('/api/documents/:documentId/versions/:version/approve', ensureAuth, (req, res) => documentController.approveVersion(req, res));
+app.post('/api/documents/:documentId/rollback', ensureAuth, (req, res) => documentController.rollbackVersion(req, res));
+app.get('/api/documents/:documentId/export', ensureAuth, (req, res) => documentController.exportDocument(req, res));
+app.post('/api/documents/:documentId/share', ensureAuth, (req, res) => documentController.shareDocument(req, res));
+
+// Template endpoints
+app.get('/api/templates', ensureAuth, (req, res) => documentController.getTemplates(req, res));
+
+// Setup endpoints
+app.post('/api/setup/folders', ensureAuth, (req, res) => documentController.setupInitialFolders(req, res));
 
 // AI Assistant endpoint (placeholder)
 app.post('/api/ai/chat', ensureAuth, (req, res) => {

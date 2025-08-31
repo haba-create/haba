@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import DocumentGenerator from './pages/DocumentGenerator'
+import EnhancedDocumentGenerator from './pages/EnhancedDocumentGenerator'
 import AIAssistants from './pages/AIAssistants'
 import Clients from './pages/Clients'
 import Projects from './pages/Projects'
@@ -51,7 +52,7 @@ function App() {
             user ? <DashboardLayout /> : <Navigate to="/login" />
           }>
             <Route index element={<Dashboard />} />
-            <Route path="documents" element={<DocumentGenerator />} />
+            <Route path="documents" element={<EnhancedDocumentGenerator />} />
             <Route path="ai" element={<AIAssistants />} />
             <Route path="clients" element={<Clients />} />
             <Route path="projects" element={<Projects />} />
