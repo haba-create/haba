@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import DocumentGenerator from './pages/DocumentGenerator'
 import EnhancedDocumentGenerator from './pages/EnhancedDocumentGenerator'
 import SimpleDocumentGenerator from './pages/SimpleDocumentGenerator'
+import AdvancedDocumentGenerator from './pages/AdvancedDocumentGenerator'
 import AIAssistants from './pages/AIAssistants'
 import Clients from './pages/Clients'
 import Projects from './pages/Projects'
@@ -53,7 +54,8 @@ function App() {
             user ? <DashboardLayout /> : <Navigate to="/login" />
           }>
             <Route index element={<Dashboard />} />
-            <Route path="documents" element={<SimpleDocumentGenerator />} />
+            <Route path="documents" element={<AdvancedDocumentGenerator />} />
+            <Route path="documents-simple" element={<SimpleDocumentGenerator />} />
             <Route path="documents-old" element={<EnhancedDocumentGenerator />} />
             <Route path="ai" element={<AIAssistants />} />
             <Route path="clients" element={<Clients />} />

@@ -92,11 +92,27 @@ app.get('/api/user', ensureAuth, (req, res) => {
 const SimpleDocumentController = require('./server/controllers/simpleDocumentController');
 const simpleDocController = new SimpleDocumentController();
 
+// Enhanced controller with Agent capabilities
+const EnhancedDocumentController = require('./server/controllers/enhancedDocumentController');
+const enhancedDocController = new EnhancedDocumentController();
+
 // Keep old controller for backwards compatibility
 const DocumentController = require('./server/controllers/documentController');
 const documentController = new DocumentController();
 
-// NEW SIMPLIFIED Document API endpoints (MVP)
+// NEW ENHANCED Document API endpoints (v3 - with Agent capabilities)
+app.get('/api/v3/documents', ensureAuth, (req, res) => enhancedDocController.listDocuments(req, res));
+app.post('/api/v3/documents/generate', 
+  ensureAuth, 
+  (req, res, next) => enhancedDocController.handleTemplateUpload(req, res, next),
+  (req, res) => enhancedDocController.generateAdvancedDocument(req, res)
+);
+app.get('/api/v3/documents/:documentId/download', ensureAuth, (req, res) => enhancedDocController.downloadConvertedDocument(req, res));
+app.post('/api/v3/documents/:documentId/convert', ensureAuth, (req, res) => enhancedDocController.convertDocument(req, res));
+app.get('/api/v3/templates', ensureAuth, (req, res) => enhancedDocController.getTemplates(req, res));
+app.post('/api/v3/images/generate', ensureAuth, (req, res) => enhancedDocController.generateImage(req, res));
+
+// SIMPLIFIED Document API endpoints (v2 - MVP)
 app.get('/api/v2/documents', ensureAuth, (req, res) => simpleDocController.listDocuments(req, res));
 app.post('/api/v2/documents/generate', ensureAuth, (req, res) => simpleDocController.generateDocument(req, res));
 app.get('/api/v2/documents/:documentId', ensureAuth, (req, res) => simpleDocController.getDocument(req, res));
