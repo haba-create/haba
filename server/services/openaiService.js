@@ -8,10 +8,17 @@ class OpenAIService {
   }
 
   async generateDocument(type, requirements, context, template = null) {
+    if (!this.apiKey) {
+      throw new Error('OpenAI API key is not configured. Please set OPENAI_API_KEY environment variable.');
+    }
+
     const prompt = this.buildPrompt(type, requirements, context, template);
     
     try {
       console.log(`Generating ${type} document with OpenAI...`);
+      console.log('Using model:', this.model);
+      console.log('API Key present:', !!this.apiKey);
+      console.log('API Key length:', this.apiKey?.length);
       
       const response = await axios.post(
         this.apiUrl,
@@ -40,8 +47,21 @@ class OpenAIService {
 
       return this.parseResponse(response.data, type);
     } catch (error) {
-      console.error('OpenAI API Error:', error.response?.data || error.message);
-      throw new Error(`Failed to generate ${type} document: ${error.message}`);
+      console.error('OpenAI API Error Details:');
+      console.error('Status:', error.response?.status);
+      console.error('Status Text:', error.response?.statusText);
+      console.error('Error Message:', error.response?.data?.error?.message || error.message);
+      console.error('Full error:', error.response?.data);
+      
+      if (error.response?.status === 401) {
+        throw new Error('OpenAI API authentication failed. Please check your API key.');
+      } else if (error.response?.status === 429) {
+        throw new Error('OpenAI API rate limit exceeded. Please try again later.');
+      } else if (error.response?.status === 400) {
+        throw new Error(`OpenAI API request error: ${error.response?.data?.error?.message || 'Invalid request'}`);
+      }
+      
+      throw new Error(`Failed to generate ${type} document: ${error.response?.data?.error?.message || error.message}`);
     }
   }
 
@@ -49,12 +69,15 @@ class OpenAIService {
     const documentTypes = {
       'powerpoint': this.buildPowerPointPrompt,
       'word': this.buildWordPrompt,
-      'excel': this.buildExcelPrompt
+      'excel': this.buildExcelPrompt,
+      'hld': this.buildHLDPrompt,
+      'lld': this.buildLLDPrompt
     };
 
     const promptBuilder = documentTypes[type.toLowerCase()];
     if (!promptBuilder) {
-      throw new Error(`Unsupported document type: ${type}`);
+      // Default to Word format for unknown types
+      return this.buildWordPrompt(requirements, context, template);
     }
 
     return promptBuilder.call(this, requirements, context, template);
@@ -131,6 +154,90 @@ class OpenAIService {
       Format the response as a JSON object with:
       - sections: array of section objects
       - Each section should have: title, content, level (1-3 for heading levels)
+      `;
+    }
+
+    return prompt;
+  }
+
+  buildHLDPrompt(requirements, context, template) {
+    let prompt = `Create a professional High-Level Design (HLD) document with the following requirements:
+    
+    Client: ${context.client}
+    Project: ${context.projectName}
+    Author: ${context.author || 'HABA Consulting'}
+    
+    Requirements:
+    ${JSON.stringify(requirements, null, 2)}
+    `;
+
+    if (template) {
+      prompt += `
+      
+      Use this template structure:
+      ${JSON.stringify(template, null, 2)}
+      `;
+    } else {
+      prompt += `
+      
+      Create a comprehensive HLD document following IEEE and TOGAF standards with:
+      1. Executive Summary
+      2. Business Objectives and Requirements
+      3. System Architecture Overview
+      4. Component Architecture
+      5. Technology Stack and Rationale
+      6. Integration Architecture
+      7. Security Architecture
+      8. Deployment Architecture
+      9. Performance and Scalability
+      10. Risks and Mitigations
+      
+      Format the response as a JSON object with:
+      - sections: array of section objects
+      - Each section should have: title, content, level (1-3 for heading levels)
+      - metadata: object with document properties
+      `;
+    }
+
+    return prompt;
+  }
+
+  buildLLDPrompt(requirements, context, template) {
+    let prompt = `Create a professional Low-Level Design (LLD) document with the following requirements:
+    
+    Client: ${context.client}
+    Project: ${context.projectName}
+    Author: ${context.author || 'HABA Consulting'}
+    
+    Requirements:
+    ${JSON.stringify(requirements, null, 2)}
+    `;
+
+    if (template) {
+      prompt += `
+      
+      Use this template structure:
+      ${JSON.stringify(template, null, 2)}
+      `;
+    } else {
+      prompt += `
+      
+      Create a detailed LLD document following IEEE 1016 standards with:
+      1. Technical Overview
+      2. Detailed Component Specifications
+      3. API Specifications (RESTful endpoints, request/response formats)
+      4. Database Design (schemas, relationships, indexes)
+      5. Core Algorithms and Logic
+      6. Error Handling and Recovery
+      7. Performance Optimization Strategies
+      8. Security Implementation Details
+      9. Testing Strategy and Test Cases
+      10. Deployment and Configuration
+      
+      Format the response as a JSON object with:
+      - sections: array of section objects
+      - Each section should have: title, content, level (1-3 for heading levels)
+      - metadata: object with document properties
       `;
     }
 

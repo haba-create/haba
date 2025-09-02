@@ -162,15 +162,22 @@ class DocumentService {
     const template = this.templates.get(documentType);
     
     // Route to appropriate service
-    if (documentType === 'HLD' || documentType === 'LLD') {
-      // Use Claude for Google Docs (HLD/LLD)
+    // NOTE: Using OpenAI for all document types due to Claude API model access issues
+    // You can switch back to Claude for HLD/LLD once model access is resolved
+    
+    if (process.env.CLAUDE_API_KEY && process.env.USE_CLAUDE_FOR_DOCS === 'true' && (documentType === 'HLD' || documentType === 'LLD')) {
+      // Use Claude for Google Docs (HLD/LLD) if explicitly enabled
       console.log(`Using Claude API for ${documentType} generation...`);
       return await this.claudeService.generateDocument(documentType, requirements, context);
-    } else if (['POWERPOINT', 'WORD', 'EXCEL'].includes(documentType)) {
-      // Use OpenAI for Microsoft Office documents
+    } else if (['HLD', 'LLD', 'POWERPOINT', 'WORD', 'EXCEL'].includes(documentType)) {
+      // Use OpenAI for all documents (fallback)
       console.log(`Using OpenAI API for ${documentType} generation...`);
+      
+      // Convert HLD/LLD to use OpenAI format
+      const openAIType = ['HLD', 'LLD'].includes(documentType) ? 'word' : documentType.toLowerCase();
+      
       return await this.openaiService.generateDocument(
-        documentType.toLowerCase(), 
+        openAIType, 
         requirements, 
         context, 
         template

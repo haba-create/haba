@@ -191,4 +191,17 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log('Login credentials: username=stephen, password=haba2024');
+  
+  // Check API keys on startup
+  console.log('=== API Configuration Status ===');
+  console.log('Claude API Key:', process.env.CLAUDE_API_KEY ? `Configured (${process.env.CLAUDE_API_KEY.length} chars)` : 'NOT CONFIGURED');
+  console.log('OpenAI API Key:', process.env.OPENAI_API_KEY ? `Configured (${process.env.OPENAI_API_KEY.length} chars)` : 'NOT CONFIGURED');
+  console.log('Claude Model:', process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022');
+  console.log('OpenAI Model:', process.env.OPENAI_MODEL || 'gpt-4-turbo-preview');
+  console.log('================================');
+  
+  if (!process.env.CLAUDE_API_KEY && !process.env.OPENAI_API_KEY) {
+    console.warn('⚠️  WARNING: No API keys configured. Document generation will not work.');
+    console.warn('⚠️  Please set CLAUDE_API_KEY and/or OPENAI_API_KEY in your .env file or environment variables.');
+  }
 });

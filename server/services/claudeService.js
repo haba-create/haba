@@ -4,13 +4,21 @@ class ClaudeService {
   constructor() {
     this.apiKey = process.env.CLAUDE_API_KEY;
     this.apiUrl = 'https://api.anthropic.com/v1/messages';
-    this.model = process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022';
+    this.model = process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20240620';
   }
 
   async generateDocument(type, requirements, context) {
+    if (!this.apiKey) {
+      throw new Error('Claude API key is not configured. Please set CLAUDE_API_KEY environment variable.');
+    }
+
     const prompt = this.buildPrompt(type, requirements, context);
     
     try {
+      console.log('Calling Claude API with model:', this.model);
+      console.log('API Key present:', !!this.apiKey);
+      console.log('API Key length:', this.apiKey?.length);
+      
       const response = await axios.post(
         this.apiUrl,
         {
@@ -35,8 +43,21 @@ class ClaudeService {
 
       return this.parseResponse(response.data);
     } catch (error) {
-      console.error('Claude API Error:', error);
-      throw new Error('Failed to generate document content');
+      console.error('Claude API Error Details:');
+      console.error('Status:', error.response?.status);
+      console.error('Status Text:', error.response?.statusText);
+      console.error('Error Message:', error.response?.data?.error?.message || error.message);
+      console.error('Full error:', error.response?.data);
+      
+      if (error.response?.status === 401) {
+        throw new Error('Claude API authentication failed. Please check your API key.');
+      } else if (error.response?.status === 429) {
+        throw new Error('Claude API rate limit exceeded. Please try again later.');
+      } else if (error.response?.status === 400) {
+        throw new Error(`Claude API request error: ${error.response?.data?.error?.message || 'Invalid request'}`);
+      }
+      
+      throw new Error(`Failed to generate document: ${error.response?.data?.error?.message || error.message}`);
     }
   }
 
