@@ -1,0 +1,18 @@
+
+> haba-website@1.0.0 start
+> node server.js
+
+Server running on port 3000
+Login credentials: username=stephen, password=haba2024
+=== API Configuration Status ===
+Claude API Key: Configured (108 chars)
+OpenAI API Key: Configured (164 chars)
+Claude Model: claude-3-5-sonnet-20240620
+OpenAI Model: gpt-4-turbo-preview
+================================
+Failed to initialize Google Auth: [Error: ENOENT: no such file or directory, open '/workspaces/haba/credentials/google-service-account.json'] {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/workspaces/haba/credentials/google-service-account.json'
+}
