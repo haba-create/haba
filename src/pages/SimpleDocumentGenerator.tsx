@@ -365,7 +365,21 @@ const SimpleDocumentGenerator = () => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white/5 border border-white/10 rounded-xl p-6"
           >
-            <h3 className="text-xl font-light mb-4">Generated Document</h3>
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-xl font-light">Generated Document</h3>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  // Download document
+                  window.open(`/api/v2/documents/${generatedDocument.document.id}/download`, '_blank')
+                }}
+                className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-sm font-medium flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                Download JSON
+              </motion.button>
+            </div>
             <div className="space-y-2 text-sm">
               <p><span className="text-gray-400">Title:</span> {generatedDocument.document.title}</p>
               <p><span className="text-gray-400">Type:</span> {generatedDocument.document.type}</p>

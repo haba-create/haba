@@ -158,6 +158,35 @@ class SimpleDocumentController {
     }
   }
 
+  async downloadDocument(req, res) {
+    try {
+      const { documentId } = req.params;
+      
+      // Get document from the list
+      const documents = await this.documentService.listGeneratedDocuments();
+      const document = documents.find(doc => doc.id === documentId);
+      
+      if (!document) {
+        return res.status(404).json({
+          error: 'Document not found'
+        });
+      }
+      
+      // Set headers for download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', `attachment; filename="${document.title || documentId}.json"`);
+      
+      // Send the document content
+      res.json(document);
+    } catch (error) {
+      console.error('Error downloading document:', error);
+      res.status(500).json({
+        error: 'Failed to download document',
+        details: error.message
+      });
+    }
+  }
+
   // Simplified test endpoint to verify services are working
   async testGeneration(req, res) {
     try {

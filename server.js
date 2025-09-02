@@ -100,6 +100,7 @@ const documentController = new DocumentController();
 app.get('/api/v2/documents', ensureAuth, (req, res) => simpleDocController.listDocuments(req, res));
 app.post('/api/v2/documents/generate', ensureAuth, (req, res) => simpleDocController.generateDocument(req, res));
 app.get('/api/v2/documents/:documentId', ensureAuth, (req, res) => simpleDocController.getDocument(req, res));
+app.get('/api/v2/documents/:documentId/download', ensureAuth, (req, res) => simpleDocController.downloadDocument(req, res));
 app.get('/api/v2/templates', ensureAuth, (req, res) => simpleDocController.getTemplates(req, res));
 app.get('/api/v2/test', ensureAuth, (req, res) => simpleDocController.testGeneration(req, res));
 
