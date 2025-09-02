@@ -4,7 +4,7 @@ class ClaudeService {
   constructor() {
     this.apiKey = process.env.CLAUDE_API_KEY;
     this.apiUrl = 'https://api.anthropic.com/v1/messages';
-    this.model = 'claude-3-opus-20240229';
+    this.model = process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022';
   }
 
   async generateDocument(type, requirements, context) {

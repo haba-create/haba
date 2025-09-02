@@ -88,11 +88,22 @@ app.get('/api/user', ensureAuth, (req, res) => {
   });
 });
 
-// Import Document Controller
+// Import Document Controllers
+const SimpleDocumentController = require('./server/controllers/simpleDocumentController');
+const simpleDocController = new SimpleDocumentController();
+
+// Keep old controller for backwards compatibility
 const DocumentController = require('./server/controllers/documentController');
 const documentController = new DocumentController();
 
-// Document API endpoints
+// NEW SIMPLIFIED Document API endpoints (MVP)
+app.get('/api/v2/documents', ensureAuth, (req, res) => simpleDocController.listDocuments(req, res));
+app.post('/api/v2/documents/generate', ensureAuth, (req, res) => simpleDocController.generateDocument(req, res));
+app.get('/api/v2/documents/:documentId', ensureAuth, (req, res) => simpleDocController.getDocument(req, res));
+app.get('/api/v2/templates', ensureAuth, (req, res) => simpleDocController.getTemplates(req, res));
+app.get('/api/v2/test', ensureAuth, (req, res) => simpleDocController.testGeneration(req, res));
+
+// OLD Document API endpoints (keeping for backwards compatibility)
 app.get('/api/documents', ensureAuth, (req, res) => documentController.listDocuments(req, res));
 app.post('/api/documents/generate', ensureAuth, (req, res) => documentController.generateDocument(req, res));
 app.get('/api/documents/:documentId', ensureAuth, (req, res) => documentController.getDocument(req, res));
