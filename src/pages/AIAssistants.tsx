@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Bot, 
-  Send, 
-  Sparkles, 
+import axios from 'axios'
+import {
+  Bot,
+  Send,
+  Sparkles,
   Brain,
   Code,
   FileText,
@@ -11,42 +12,104 @@ import {
   Settings,
   Copy,
   RefreshCw,
-  ChevronDown
+  Loader2,
+  Trash2
 } from 'lucide-react'
 
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+  model?: string
+  timestamp?: string
+}
+
 const AIAssistants = () => {
-  const [selectedModel, setSelectedModel] = useState('gpt-5')
+  const [selectedModel, setSelectedModel] = useState('gpt-4')
   const [message, setMessage] = useState('')
-  const [conversation, setConversation] = useState<any[]>([
-    { role: 'assistant', content: 'Hello! I\'m your AI assistant. I can help you with data analysis, document generation, code review, and strategic insights. How can I assist you today?', model: 'system' }
+  const [loading, setLoading] = useState(false)
+  const [conversation, setConversation] = useState<Message[]>([
+    {
+      role: 'assistant',
+      content: 'Hello! I\'m your AI assistant powered by advanced language models. I can help you with:\n\n• **Data Analysis** - Analyze trends and provide insights\n• **Document Generation** - Create professional documents\n• **Code Review** - Review and improve code\n• **Strategic Planning** - Business recommendations\n\nHow can I assist you today?',
+      model: 'system',
+      timestamp: new Date().toISOString()
+    }
   ])
+  const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const models = [
-    { id: 'gpt-5', name: 'GPT-5', provider: 'OpenAI', description: 'Most advanced reasoning', icon: Brain },
-    { id: 'claude-sonnet', name: 'Claude Sonnet 4.0', provider: 'Anthropic', description: 'Best for analysis', icon: Sparkles },
+    { id: 'gpt-4', name: 'GPT-4 Turbo', provider: 'OpenAI', description: 'Advanced reasoning', icon: Brain },
+    { id: 'claude-sonnet', name: 'Claude Sonnet', provider: 'Anthropic', description: 'Best for analysis', icon: Sparkles },
   ]
 
   const quickPrompts = [
-    { label: 'Analyze Data Trends', icon: TrendingUp, prompt: 'Analyze the recent data trends and provide insights' },
-    { label: 'Generate Report', icon: FileText, prompt: 'Generate a comprehensive report based on current project status' },
-    { label: 'Code Review', icon: Code, prompt: 'Review the recent code changes and suggest improvements' },
-    { label: 'Strategic Advice', icon: Brain, prompt: 'Provide strategic recommendations for business growth' },
+    { label: 'Analyze Data Trends', icon: TrendingUp, prompt: 'Analyze the recent data trends for our consulting projects and provide insights on areas for improvement.' },
+    { label: 'Generate Report', icon: FileText, prompt: 'Generate a comprehensive executive summary report template for a new client engagement.' },
+    { label: 'Code Review', icon: Code, prompt: 'Provide best practices for implementing a document generation API with proper error handling and security measures.' },
+    { label: 'Strategic Advice', icon: Brain, prompt: 'Provide strategic recommendations for growing a data and AI consultancy business in the current market.' },
   ]
 
-  const handleSend = () => {
-    if (!message.trim()) return
-    
-    setConversation([...conversation, { role: 'user', content: message }])
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [conversation])
+
+  const handleSend = async () => {
+    if (!message.trim() || loading) return
+
+    const userMessage: Message = {
+      role: 'user',
+      content: message,
+      timestamp: new Date().toISOString()
+    }
+
+    setConversation(prev => [...prev, userMessage])
     setMessage('')
-    
-    // Simulate AI response
-    setTimeout(() => {
-      setConversation(prev => [...prev, { 
-        role: 'assistant', 
-        content: `I understand you want to: "${message}". Let me process that for you...`, 
-        model: selectedModel 
-      }])
-    }, 1000)
+    setLoading(true)
+
+    try {
+      const response = await axios.post('/api/ai/chat', {
+        message: message,
+        model: selectedModel,
+        conversationHistory: conversation.slice(-10) // Send last 10 messages for context
+      })
+
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: response.data.response,
+        model: selectedModel,
+        timestamp: new Date().toISOString()
+      }
+
+      setConversation(prev => [...prev, assistantMessage])
+    } catch (error: any) {
+      console.error('Error sending message:', error)
+      const errorMessage: Message = {
+        role: 'assistant',
+        content: `I apologize, but I encountered an error: ${error.response?.data?.error || error.message || 'Unable to process your request'}. Please try again or check your API configuration.`,
+        model: 'error',
+        timestamp: new Date().toISOString()
+      }
+      setConversation(prev => [...prev, errorMessage])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleCopy = (content: string) => {
+    navigator.clipboard.writeText(content)
+  }
+
+  const handleClearConversation = () => {
+    setConversation([{
+      role: 'assistant',
+      content: 'Conversation cleared. How can I help you today?',
+      model: 'system',
+      timestamp: new Date().toISOString()
+    }])
   }
 
   const handleQuickPrompt = (prompt: string) => {
@@ -66,9 +129,18 @@ const AIAssistants = () => {
           <h1 className="text-4xl font-bold text-white mb-2">AI Assistants</h1>
           <p className="text-gray-400">Leverage cutting-edge AI for your consultancy needs</p>
         </div>
-        <button className="p-3 rounded-xl glass-dark border border-white/10 hover:border-white/20 transition-all">
-          <Settings className="w-5 h-5 text-gray-400" />
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleClearConversation}
+            className="p-3 rounded-xl glass-dark border border-white/10 hover:border-red-500/30 transition-all group"
+            title="Clear conversation"
+          >
+            <Trash2 className="w-5 h-5 text-gray-400 group-hover:text-red-400" />
+          </button>
+          <button className="p-3 rounded-xl glass-dark border border-white/10 hover:border-white/20 transition-all">
+            <Settings className="w-5 h-5 text-gray-400" />
+          </button>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -132,14 +204,13 @@ const AIAssistants = () => {
                     </div>
                     {msg.role === 'assistant' && (
                       <div className="flex gap-2 mt-2 px-2">
-                        <button className="text-xs text-gray-500 hover:text-white transition-colors">
-                          <Copy className="w-3 h-3 inline mr-1" />
-                          Copy
-                        </button>
-                        <button className="text-xs text-gray-500 hover:text-white transition-colors">
-                          <RefreshCw className="w-3 h-3 inline mr-1" />
-                          Regenerate
-                        </button>
+                        <button
+                        onClick={() => handleCopy(msg.content)}
+                        className="text-xs text-gray-500 hover:text-white transition-colors"
+                      >
+                        <Copy className="w-3 h-3 inline mr-1" />
+                        Copy
+                      </button>
                       </div>
                     )}
                   </div>
@@ -152,6 +223,19 @@ const AIAssistants = () => {
                   </div>
                 </motion.div>
               ))}
+              {loading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="glass-dark border border-white/10 rounded-2xl p-4 flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-purple-500" />
+                    <span className="text-sm text-gray-400">Thinking...</span>
+                  </div>
+                </motion.div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
 
             {/* Input Area */}
@@ -167,9 +251,10 @@ const AIAssistants = () => {
                 />
                 <button
                   onClick={handleSend}
-                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium hover:shadow-lg transition-all"
+                  disabled={loading || !message.trim()}
+                  className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Send className="w-5 h-5" />
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
             </div>

@@ -53,14 +53,16 @@ Set environment variables in Railway dashboard:
 - Other production configs
 
 ## Current Implementation Status
-- ✅ Basic authentication system
-- ✅ Express server setup
-- ✅ React frontend
-- 🚧 Document generation pipeline (IN PROGRESS)
-- 🚧 Template system (IN PROGRESS)
-- ⏳ AI service integration
-- ⏳ Microsoft Office document support
-- ⏳ Full Google Docs integration
+- ✅ Basic authentication system (username/password + Google OAuth)
+- ✅ Express server setup with 3 API versions (v1, v2, v3)
+- ✅ React frontend with all pages complete
+- ✅ Document generation pipeline (OpenAI + Claude)
+- ✅ Template system (HLD, LLD, PowerPoint, Word, Excel)
+- ✅ AI service integration (OpenAI GPT-4, Claude, OpenAI Assistants)
+- ✅ Microsoft Office document support (PPTX, DOCX, XLSX via Officegen)
+- ✅ PDF export support (via html-pdf-node)
+- ✅ AI Chat Assistant with real API integration
+- ✅ Document versioning and management
 
 ## Testing the Pipeline
 1. Start local server: `npm run server`
@@ -83,15 +85,30 @@ Set environment variables in Railway dashboard:
 ## Document Types Support Matrix
 | Document Type | AI Service | Format | Status |
 |--------------|------------|---------|---------|
-| HLD | Claude | Google Docs | 🚧 In Progress |
-| LLD | Claude | Google Docs | 🚧 In Progress |
-| PowerPoint | OpenAI | .pptx | ⏳ Planned |
-| Word | OpenAI | .docx | ⏳ Planned |
-| Excel | OpenAI | .xlsx | ⏳ Planned |
+| HLD | OpenAI/Claude | JSON/PDF/DOCX | ✅ Complete |
+| LLD | OpenAI/Claude | JSON/PDF/DOCX | ✅ Complete |
+| PowerPoint | OpenAI | .pptx | ✅ Complete |
+| Word | OpenAI | .docx | ✅ Complete |
+| Excel | OpenAI | .xlsx | ✅ Complete |
 
-## Next Steps
-1. Complete API service integration
-2. Implement template system
-3. Add document format converters
-4. Test full pipeline end-to-end
-5. Deploy to Railway with proper configs
+## API Endpoints
+
+### V3 API (Recommended - Advanced)
+- `GET /api/v3/documents` - List documents
+- `POST /api/v3/documents/generate` - Generate with file upload support
+- `GET /api/v3/documents/:id/download` - Download in any format
+- `POST /api/v3/images/generate` - DALL-E image generation
+
+### V2 API (Simple MVP)
+- `GET /api/v2/documents` - List documents
+- `POST /api/v2/documents/generate` - Basic generation
+- `GET /api/v2/templates` - Get templates
+
+### AI Chat
+- `POST /api/ai/chat` - Chat with AI assistant
+
+## Architecture Notes
+- All document types now use OpenAI by default for consistent performance
+- Claude can be enabled for HLD/LLD by setting `USE_CLAUDE_FOR_DOCS=true`
+- OpenAI Assistants API provides advanced agent capabilities with code interpreter
+- Document converter service handles PDF, DOCX, PPTX, XLSX output formats

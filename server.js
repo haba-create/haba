@@ -137,13 +137,83 @@ app.get('/api/templates', ensureAuth, (req, res) => documentController.getTempla
 // Setup endpoints
 app.post('/api/setup/folders', ensureAuth, (req, res) => documentController.setupInitialFolders(req, res));
 
-// AI Assistant endpoint (placeholder)
-app.post('/api/ai/chat', ensureAuth, (req, res) => {
-  const { message, model } = req.body;
-  res.json({
-    response: `This is a placeholder response for: "${message}" using ${model}`,
-    model: model
-  });
+// AI Assistant endpoint with real API integration
+app.post('/api/ai/chat', ensureAuth, async (req, res) => {
+  const { message, model, conversationHistory } = req.body;
+
+  try {
+    // Check if OpenAI API is available
+    if (process.env.OPENAI_API_KEY) {
+      const axios = require('axios');
+
+      // Build messages array with conversation history
+      const messages = [
+        {
+          role: 'system',
+          content: `You are an expert AI assistant for HABA Consulting, a professional data and AI consultancy firm.
+You help with:
+- Strategic business advice and planning
+- Technical architecture and design recommendations
+- Data analysis and insights
+- Document generation guidance
+- Code review and best practices
+- Project management advice
+
+Be professional, concise, and provide actionable insights. Format your responses with markdown for better readability.`
+        }
+      ];
+
+      // Add conversation history if provided
+      if (conversationHistory && Array.isArray(conversationHistory)) {
+        for (const msg of conversationHistory.slice(-8)) {
+          if (msg.role === 'user' || msg.role === 'assistant') {
+            messages.push({
+              role: msg.role,
+              content: msg.content
+            });
+          }
+        }
+      }
+
+      // Add current message
+      messages.push({ role: 'user', content: message });
+
+      const response = await axios.post(
+        'https://api.openai.com/v1/chat/completions',
+        {
+          model: model === 'gpt-4' ? 'gpt-4-turbo-preview' : 'gpt-3.5-turbo',
+          messages: messages,
+          temperature: 0.7,
+          max_tokens: 2000
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+          }
+        }
+      );
+
+      res.json({
+        response: response.data.choices[0].message.content,
+        model: model,
+        usage: response.data.usage
+      });
+    } else {
+      // Fallback response when no API key is configured
+      res.json({
+        response: `**API Not Configured**\n\nI noticed that the OpenAI API key is not configured. To enable full AI capabilities, please set the \`OPENAI_API_KEY\` environment variable.\n\nIn the meantime, I received your message: "${message}"\n\nOnce configured, I'll be able to provide intelligent responses for:\n- Business strategy\n- Technical guidance\n- Data analysis\n- Document generation assistance`,
+        model: model,
+        note: 'API key not configured - showing placeholder response'
+      });
+    }
+  } catch (error) {
+    console.error('AI Chat error:', error.response?.data || error.message);
+    res.status(500).json({
+      error: 'Failed to process chat request',
+      details: error.response?.data?.error?.message || error.message
+    });
+  }
 });
 
 // Auth routes
