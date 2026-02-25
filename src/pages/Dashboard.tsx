@@ -1,31 +1,35 @@
 import { motion } from 'framer-motion'
-import { 
-  FileText, 
-  Bot, 
-  Users, 
-  Briefcase, 
-  TrendingUp, 
+import {
+  FileText,
+  Bot,
+  Users,
+  Briefcase,
+  TrendingUp,
   Calendar,
-  DollarSign,
-  Activity
+  Activity,
+  ArrowUpRight,
+  ArrowRight,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthContext } from '../contexts/AuthContext'
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const { user } = useContext(AuthContext)
 
   const stats = [
-    { label: 'Active Projects', value: '12', icon: Briefcase, color: 'from-purple-500 to-purple-600', change: '+2' },
-    { label: 'Total Clients', value: '8', icon: Users, color: 'from-blue-500 to-blue-600', change: '+1' },
-    { label: 'Documents', value: '47', icon: FileText, color: 'from-cyan-500 to-cyan-600', change: '+5' },
-    { label: 'AI Queries', value: '234', icon: Bot, color: 'from-pink-500 to-pink-600', change: '+18' },
+    { label: 'Active Projects', value: '12', icon: Briefcase, change: '+2', color: '#0EA5E9' },
+    { label: 'Total Clients', value: '8', icon: Users, change: '+1', color: '#8B5CF6' },
+    { label: 'Documents', value: '47', icon: FileText, change: '+5', color: '#10B981' },
+    { label: 'AI Queries', value: '234', icon: Bot, change: '+18', color: '#F59E0B' },
   ]
 
   const quickActions = [
-    { label: 'Generate Document', icon: FileText, path: '/dashboard/documents', color: 'purple' },
-    { label: 'AI Assistant', icon: Bot, path: '/dashboard/ai', color: 'blue' },
-    { label: 'View Clients', icon: Users, path: '/dashboard/clients', color: 'cyan' },
-    { label: 'Manage Projects', icon: Briefcase, path: '/dashboard/projects', color: 'pink' },
+    { label: 'Generate Document', description: 'Create AI-powered docs', icon: FileText, path: '/dashboard/documents' },
+    { label: 'AI Assistant', description: 'Chat with AI models', icon: Bot, path: '/dashboard/ai' },
+    { label: 'View Clients', description: 'Client directory', icon: Users, path: '/dashboard/clients' },
+    { label: 'Manage Projects', description: 'Project overview', icon: Briefcase, path: '/dashboard/projects' },
   ]
 
   const recentActivity = [
@@ -43,8 +47,12 @@ const Dashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
-        <p className="text-gray-400">Welcome back! Here's what's happening with your consultancy.</p>
+        <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>
+          Welcome back, {user?.displayName || 'User'}
+        </h1>
+        <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
+          Here's an overview of your consultancy activity.
+        </p>
       </motion.div>
 
       {/* Stats Grid */}
@@ -52,52 +60,65 @@ const Dashboard = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
       >
         {stats.map((stat, index) => (
           <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 + index * 0.05 }}
-            className="glass rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all"
+            transition={{ duration: 0.4, delay: 0.1 + index * 0.05 }}
+            className="card rounded-xl p-5"
           >
-            <div className="flex items-start justify-between mb-4">
-              <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
-                <stat.icon className="w-6 h-6 text-white" />
+            <div className="flex items-start justify-between mb-3">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center"
+                style={{ backgroundColor: `${stat.color}15` }}
+              >
+                <stat.icon className="w-5 h-5" style={{ color: stat.color }} />
               </div>
-              <span className="text-xs text-green-400 font-medium">{stat.change}</span>
+              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-emerald-500">
+                <ArrowUpRight className="w-3 h-3" />
+                {stat.change}
+              </span>
             </div>
-            <div className="space-y-1">
-              <p className="text-3xl font-bold text-white">{stat.value}</p>
-              <p className="text-sm text-gray-400">{stat.label}</p>
-            </div>
+            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{stat.value}</p>
+            <p className="text-xs font-medium mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{stat.label}</p>
           </motion.div>
         ))}
       </motion.div>
 
       {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="glass rounded-2xl p-6 border border-white/10"
+          className="card rounded-xl p-5"
         >
-          <h2 className="text-xl font-semibold text-white mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <h2 className="text-base font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Quick Actions</h2>
+          <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action) => (
               <button
                 key={action.label}
                 onClick={() => navigate(action.path)}
-                className="group relative overflow-hidden rounded-xl p-4 glass-dark border border-white/10 hover:border-white/20 transition-all"
+                className="group text-left p-4 rounded-xl transition-all duration-200"
+                style={{
+                  backgroundColor: 'var(--bg-tertiary)',
+                  border: '1px solid transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--accent)'
+                  e.currentTarget.style.backgroundColor = 'var(--accent-light)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'transparent'
+                  e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'
+                }}
               >
-                <div className="relative z-10">
-                  <action.icon className="w-8 h-8 text-white mb-2" />
-                  <p className="text-sm text-gray-300">{action.label}</p>
-                </div>
-                <div className={`absolute inset-0 bg-gradient-to-r from-${action.color}-600/10 to-${action.color}-600/5 opacity-0 group-hover:opacity-100 transition-opacity`} />
+                <action.icon className="w-5 h-5 mb-2" style={{ color: 'var(--accent)' }} />
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{action.label}</p>
+                <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{action.description}</p>
               </button>
             ))}
           </div>
@@ -108,18 +129,29 @@ const Dashboard = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="glass rounded-2xl p-6 border border-white/10"
+          className="card rounded-xl p-5"
         >
-          <h2 className="text-xl font-semibold text-white mb-4">Recent Activity</h2>
-          <div className="space-y-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>Recent Activity</h2>
+            <button className="text-xs font-medium flex items-center gap-1" style={{ color: 'var(--accent)' }}>
+              View all <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+          <div className="space-y-3">
             {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-start gap-4">
-                <div className="p-2 rounded-lg glass-dark">
-                  <activity.icon className="w-4 h-4 text-gray-400" />
+              <div
+                key={index}
+                className="flex items-start gap-3 p-3 rounded-lg transition-colors"
+                style={{ backgroundColor: 'var(--bg-tertiary)' }}
+              >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: 'var(--accent-light)' }}
+                >
+                  <activity.icon className="w-4 h-4" style={{ color: 'var(--accent)' }} />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm text-gray-300">{activity.action}</p>
-                  <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{activity.action}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{activity.time}</p>
                 </div>
               </div>
             ))}
@@ -127,25 +159,23 @@ const Dashboard = () => {
         </motion.div>
       </div>
 
-      {/* Revenue Chart Placeholder */}
+      {/* Revenue Placeholder */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="glass rounded-2xl p-6 border border-white/10"
+        className="card rounded-xl p-5"
       >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-white">Revenue Overview</h2>
-          <div className="flex items-center gap-2">
-            <DollarSign className="w-5 h-5 text-green-400" />
-            <span className="text-sm text-gray-400">Last 6 months</span>
-          </div>
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>Revenue Overview</h2>
+          <span className="text-xs font-medium px-2 py-1 rounded-md" style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-tertiary)' }}>
+            Last 6 months
+          </span>
         </div>
-        <div className="h-64 flex items-center justify-center glass-dark rounded-xl">
+        <div className="h-48 flex items-center justify-center rounded-xl" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
           <div className="text-center">
-            <Activity className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-            <p className="text-gray-500">Revenue chart will be displayed here</p>
-            <p className="text-xs text-gray-600 mt-1">Integration coming soon</p>
+            <Activity className="w-10 h-10 mx-auto mb-2" style={{ color: 'var(--text-tertiary)' }} />
+            <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>Revenue chart coming soon</p>
           </div>
         </div>
       </motion.div>
