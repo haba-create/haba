@@ -5,25 +5,25 @@ const Projects = () => {
   const projects = [
     {
       id: 1,
-      name: 'AI-Powered Fleet Management System',
-      client: 'Marlink',
+      name: 'AI & Data Platform',
+      client: 'Allianz GI',
       status: 'in-progress',
       progress: 75,
-      deadline: '2024-02-15',
+      deadline: '2025-06-01',
       team: 3,
-      budget: '$120,000',
-      description: 'Implementing predictive maintenance and route optimization using ML models'
+      budget: '£180,000',
+      description: 'Architecting Databricks AI & Data Platform with focus on AI Agents & Compliance'
     },
     {
       id: 2,
-      name: 'Portfolio Risk Analysis Platform',
-      client: 'AllianzGI',
+      name: 'Financial AI Assistant',
+      client: 'Edge AI',
       status: 'in-progress',
-      progress: 45,
-      deadline: '2024-03-01',
-      team: 4,
-      budget: '$180,000',
-      description: 'Real-time risk assessment and portfolio rebalancing recommendations'
+      progress: 85,
+      deadline: '2025-03-01',
+      team: 2,
+      budget: '£120,000',
+      description: 'GenAI financial analysis assistant with RAG, multi-model support across 3 clouds'
     },
     {
       id: 3,
@@ -33,28 +33,28 @@ const Projects = () => {
       progress: 100,
       deadline: '2024-01-10',
       team: 2,
-      budget: '$85,000',
-      description: 'Centralized data storage and processing infrastructure'
+      budget: '£85,000',
+      description: 'Centralised data storage and processing infrastructure for maritime operations'
     },
     {
       id: 4,
       name: 'ESG Reporting Automation',
-      client: 'AllianzGI',
+      client: 'Allianz GI',
       status: 'planning',
       progress: 10,
-      deadline: '2024-04-01',
+      deadline: '2025-09-01',
       team: 2,
-      budget: '$95,000',
-      description: 'Automated ESG metrics collection and reporting system'
+      budget: '£95,000',
+      description: 'Automated ESG metrics collection and compliance reporting system'
     }
   ]
 
-  const getStatusColor = (status: string) => {
+  const getStatusStyle = (status: string) => {
     switch(status) {
-      case 'completed': return 'bg-green-500/20 text-green-400 border-green-500/30'
-      case 'in-progress': return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
-      case 'planning': return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-      default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+      case 'completed': return { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981', border: 'rgba(16, 185, 129, 0.2)' }
+      case 'in-progress': return { bg: 'rgba(14, 165, 233, 0.1)', text: '#0EA5E9', border: 'rgba(14, 165, 233, 0.2)' }
+      case 'planning': return { bg: 'rgba(245, 158, 11, 0.1)', text: '#F59E0B', border: 'rgba(245, 158, 11, 0.2)' }
+      default: return { bg: 'var(--bg-tertiary)', text: 'var(--text-tertiary)', border: 'var(--border-color)' }
     }
   }
 
@@ -74,79 +74,83 @@ const Projects = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center"
+        className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
       >
         <div>
-          <h1 className="text-4xl font-bold text-white mb-2">Projects</h1>
-          <p className="text-gray-400">Track and manage your consultancy projects</p>
+          <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Projects</h1>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Track and manage consultancy projects</p>
         </div>
-        <button className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium hover:shadow-lg transition-all">
-          <Plus className="w-5 h-5" />
+        <button className="btn-primary inline-flex items-center gap-2 text-sm">
+          <Plus className="w-4 h-4" />
           New Project
         </button>
       </motion.div>
 
       {/* Project Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {projects.map((project, index) => {
           const StatusIcon = getStatusIcon(project.status)
+          const statusStyle = getStatusStyle(project.status)
           return (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="glass rounded-2xl p-6 border border-white/10 hover:border-white/20 transition-all"
+              transition={{ duration: 0.4, delay: index * 0.08 }}
+              className="card rounded-xl p-5"
             >
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="text-xl font-semibold text-white mb-1">{project.name}</h3>
-                  <p className="text-sm text-gray-400">{project.client}</p>
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{project.name}</h3>
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--accent)' }}>{project.client}</p>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getStatusColor(project.status)}`}>
+                <span
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium shrink-0 ml-3"
+                  style={{
+                    backgroundColor: statusStyle.bg,
+                    color: statusStyle.text,
+                    border: `1px solid ${statusStyle.border}`,
+                  }}
+                >
                   <StatusIcon className="w-3 h-3" />
                   {project.status}
                 </span>
               </div>
 
-              <p className="text-sm text-gray-300 mb-4">{project.description}</p>
+              <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--text-secondary)' }}>
+                {project.description}
+              </p>
 
               {/* Progress Bar */}
               <div className="mb-4">
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-400">Progress</span>
-                  <span className="text-white font-medium">{project.progress}%</span>
+                <div className="flex justify-between text-xs mb-1.5">
+                  <span style={{ color: 'var(--text-tertiary)' }}>Progress</span>
+                  <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{project.progress}%</span>
                 </div>
-                <div className="w-full h-2 rounded-full glass-dark overflow-hidden">
-                  <div 
-                    className="h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full transition-all duration-500"
-                    style={{ width: `${project.progress}%` }}
+                <div className="w-full h-1.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
+                  <div
+                    className="h-full rounded-full transition-all duration-500"
+                    style={{
+                      width: `${project.progress}%`,
+                      background: 'linear-gradient(135deg, #0EA5E9, #8B5CF6)',
+                    }}
                   />
                 </div>
               </div>
 
-              {/* Project Details */}
-              <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-400">Deadline</p>
-                    <p className="text-white">{project.deadline}</p>
-                  </div>
+              {/* Details */}
+              <div className="grid grid-cols-3 gap-3 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-3.5 h-3.5" style={{ color: 'var(--text-tertiary)' }} />
+                  <span style={{ color: 'var(--text-secondary)' }}>{project.deadline}</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-400">Team</p>
-                    <p className="text-white">{project.team} members</p>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" style={{ color: 'var(--text-tertiary)' }} />
+                  <span style={{ color: 'var(--text-secondary)' }}>{project.team} members</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-400">Budget</p>
-                    <p className="text-white">{project.budget}</p>
-                  </div>
+                <div className="flex items-center gap-1.5">
+                  <TrendingUp className="w-3.5 h-3.5" style={{ color: 'var(--text-tertiary)' }} />
+                  <span style={{ color: 'var(--text-secondary)' }}>{project.budget}</span>
                 </div>
               </div>
             </motion.div>
@@ -154,43 +158,32 @@ const Projects = () => {
         })}
       </div>
 
-      {/* Project Statistics */}
+      {/* Statistics */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.4 }}
-        className="glass rounded-2xl p-6 border border-white/10"
+        className="card rounded-xl p-5"
       >
-        <h2 className="text-xl font-semibold text-white mb-6">Project Overview</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-xl bg-gradient-to-r from-green-500/20 to-green-600/20 flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+        <h2 className="text-base font-semibold mb-5" style={{ color: 'var(--text-primary)' }}>Project Overview</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+          {[
+            { icon: CheckCircle, count: '8', label: 'Completed', color: '#10B981' },
+            { icon: Clock, count: '4', label: 'In Progress', color: '#0EA5E9' },
+            { icon: AlertCircle, count: '2', label: 'Planning', color: '#F59E0B' },
+            { icon: Briefcase, count: '14', label: 'Total', color: '#8B5CF6' },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div
+                className="w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: `${stat.color}15` }}
+              >
+                <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
+              </div>
+              <p className="text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{stat.count}</p>
+              <p className="text-xs font-medium" style={{ color: 'var(--text-tertiary)' }}>{stat.label}</p>
             </div>
-            <p className="text-2xl font-bold text-white">8</p>
-            <p className="text-sm text-gray-400">Completed</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-xl bg-gradient-to-r from-blue-500/20 to-blue-600/20 flex items-center justify-center">
-              <Clock className="w-8 h-8 text-blue-400" />
-            </div>
-            <p className="text-2xl font-bold text-white">4</p>
-            <p className="text-sm text-gray-400">In Progress</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-xl bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 flex items-center justify-center">
-              <AlertCircle className="w-8 h-8 text-yellow-400" />
-            </div>
-            <p className="text-2xl font-bold text-white">2</p>
-            <p className="text-sm text-gray-400">Planning</p>
-          </div>
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-3 rounded-xl bg-gradient-to-r from-purple-500/20 to-purple-600/20 flex items-center justify-center">
-              <Briefcase className="w-8 h-8 text-purple-400" />
-            </div>
-            <p className="text-2xl font-bold text-white">14</p>
-            <p className="text-sm text-gray-400">Total Projects</p>
-          </div>
+          ))}
         </div>
       </motion.div>
     </div>

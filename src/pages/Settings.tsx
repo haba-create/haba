@@ -1,36 +1,30 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Settings as SettingsIcon, 
-  Key, 
-  User, 
-  Bell, 
-  Shield, 
-  Palette, 
+import {
+  Key,
+  User,
+  Bell,
+  Shield,
+  Palette,
   Database,
   Save,
   Eye,
   EyeOff,
-  Check
+  Check,
+  Sun,
+  Moon,
 } from 'lucide-react'
+import { ThemeContext } from '../contexts/ThemeContext'
 
 const Settings = () => {
+  const { theme, toggleTheme } = useContext(ThemeContext)
   const [activeTab, setActiveTab] = useState('api')
-  const [showApiKeys, setShowApiKeys] = useState({
-    openai: false,
-    anthropic: false
-  })
+  const [showApiKeys, setShowApiKeys] = useState({ openai: false, anthropic: false })
   const [saved, setSaved] = useState(false)
   const [settings, setSettings] = useState({
     openaiKey: '',
     anthropicKey: '',
-    notifications: {
-      email: true,
-      desktop: false,
-      projectUpdates: true,
-      clientActivity: true
-    },
-    theme: 'dark',
+    notifications: { email: true, desktop: false, projectUpdates: true, clientActivity: true },
     dataRetention: '90'
   })
 
@@ -56,132 +50,113 @@ const Settings = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-4xl font-bold text-white mb-2">Settings</h1>
-        <p className="text-gray-400">Manage your account and application preferences</p>
+        <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>Settings</h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Manage your account and application preferences</p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar Navigation */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="lg:col-span-1"
         >
-          <div className="glass rounded-2xl p-4 border border-white/10">
-            <nav className="space-y-2">
+          <div className="card rounded-xl p-3">
+            <nav className="space-y-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-purple-600/20 to-blue-600/20 text-white border border-purple-500/30'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5'
-                  }`}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all"
+                  style={{
+                    backgroundColor: activeTab === tab.id ? 'var(--accent)' : 'transparent',
+                    color: activeTab === tab.id ? '#fff' : 'var(--text-secondary)',
+                  }}
                 >
-                  <tab.icon className="w-5 h-5" />
-                  <span className="text-sm font-medium">{tab.label}</span>
+                  <tab.icon className="w-4 h-4" />
+                  {tab.label}
                 </button>
               ))}
             </nav>
           </div>
         </motion.div>
 
-        {/* Settings Content */}
+        {/* Content */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="lg:col-span-3"
         >
-          <div className="glass rounded-2xl p-6 border border-white/10">
-            {/* API Keys Tab */}
+          <div className="card rounded-xl p-6">
+            {/* API Keys */}
             {activeTab === 'api' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-semibold text-white mb-6">API Configuration</h2>
-                  <p className="text-gray-400 mb-6">Configure your AI assistant API keys for OpenAI and Anthropic.</p>
+                  <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>API Configuration</h2>
+                  <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Configure your AI API keys.</p>
                 </div>
-
                 <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">OpenAI API Key (GPT-5)</label>
-                    <div className="relative">
-                      <input
-                        type={showApiKeys.openai ? 'text' : 'password'}
-                        value={settings.openaiKey}
-                        onChange={(e) => setSettings({...settings, openaiKey: e.target.value})}
-                        className="w-full px-4 py-3 pr-12 rounded-lg glass-dark border border-white/10 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
-                        placeholder="sk-..."
-                      />
-                      <button
-                        onClick={() => setShowApiKeys({...showApiKeys, openai: !showApiKeys.openai})}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                      >
-                        {showApiKeys.openai ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
+                  {[
+                    { key: 'openai', label: 'OpenAI API Key', placeholder: 'sk-...', desc: 'Required for GPT-4 model access' },
+                    { key: 'anthropic', label: 'Anthropic API Key', placeholder: 'sk-ant-...', desc: 'Required for Claude model access' },
+                  ].map((field) => (
+                    <div key={field.key}>
+                      <label className="block text-sm font-medium mb-2" style={{ color: 'var(--text-secondary)' }}>{field.label}</label>
+                      <div className="relative">
+                        <input
+                          type={showApiKeys[field.key as keyof typeof showApiKeys] ? 'text' : 'password'}
+                          value={settings[`${field.key}Key` as keyof typeof settings] as string}
+                          onChange={(e) => setSettings({...settings, [`${field.key}Key`]: e.target.value})}
+                          className="input-field pr-10"
+                          placeholder={field.placeholder}
+                        />
+                        <button
+                          onClick={() => setShowApiKeys({...showApiKeys, [field.key]: !showApiKeys[field.key as keyof typeof showApiKeys]})}
+                          className="absolute right-3 top-1/2 -translate-y-1/2"
+                          style={{ color: 'var(--text-tertiary)' }}
+                        >
+                          {showApiKeys[field.key as keyof typeof showApiKeys] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                        </button>
+                      </div>
+                      <p className="text-xs mt-1.5" style={{ color: 'var(--text-tertiary)' }}>{field.desc}</p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-2">Required for GPT-5 model access</p>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-400 mb-2">Anthropic API Key (Claude Sonnet 4.0)</label>
-                    <div className="relative">
-                      <input
-                        type={showApiKeys.anthropic ? 'text' : 'password'}
-                        value={settings.anthropicKey}
-                        onChange={(e) => setSettings({...settings, anthropicKey: e.target.value})}
-                        className="w-full px-4 py-3 pr-12 rounded-lg glass-dark border border-white/10 text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none"
-                        placeholder="sk-ant-..."
-                      />
-                      <button
-                        onClick={() => setShowApiKeys({...showApiKeys, anthropic: !showApiKeys.anthropic})}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
-                      >
-                        {showApiKeys.anthropic ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">Required for Claude Sonnet 4.0 model access</p>
-                  </div>
+                  ))}
                 </div>
-
-                <div className="glass-dark rounded-xl p-4 border border-yellow-500/20">
-                  <div className="flex items-start gap-3">
-                    <Shield className="w-5 h-5 text-yellow-400 mt-0.5" />
+                <div className="p-4 rounded-lg" style={{ backgroundColor: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.15)' }}>
+                  <div className="flex items-start gap-2.5">
+                    <Shield className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-sm font-medium text-yellow-400 mb-1">Security Notice</p>
-                      <p className="text-xs text-gray-400">API keys are encrypted and stored securely. Never share your API keys with anyone.</p>
+                      <p className="text-sm font-medium text-amber-600 dark:text-amber-400">Security Notice</p>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>API keys are encrypted and stored securely.</p>
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Notifications Tab */}
+            {/* Notifications */}
             {activeTab === 'notifications' && (
               <div className="space-y-6">
                 <div>
-                  <h2 className="text-2xl font-semibold text-white mb-6">Notification Preferences</h2>
-                  <p className="text-gray-400 mb-6">Choose how you want to be notified about important updates.</p>
+                  <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Notifications</h2>
+                  <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Choose how you want to be notified.</p>
                 </div>
-
-                <div className="space-y-4">
+                <div className="space-y-3">
                   {Object.entries({
-                    email: 'Email Notifications',
-                    desktop: 'Desktop Notifications',
-                    projectUpdates: 'Project Updates',
-                    clientActivity: 'Client Activity'
-                  }).map(([key, label]) => (
-                    <div key={key} className="flex items-center justify-between p-4 rounded-lg glass-dark border border-white/10">
+                    email: ['Email Notifications', 'Receive notifications via email'],
+                    desktop: ['Desktop Notifications', 'Show desktop notifications'],
+                    projectUpdates: ['Project Updates', 'Get notified about milestones'],
+                    clientActivity: ['Client Activity', 'Alerts for client messages'],
+                  }).map(([key, [label, desc]]) => (
+                    <div
+                      key={key}
+                      className="flex items-center justify-between p-4 rounded-lg"
+                      style={{ backgroundColor: 'var(--bg-tertiary)', border: '1px solid var(--border-color)' }}
+                    >
                       <div>
-                        <p className="text-white font-medium">{label}</p>
-                        <p className="text-xs text-gray-400 mt-1">
-                          {key === 'email' && 'Receive notifications via email'}
-                          {key === 'desktop' && 'Show desktop notifications when app is open'}
-                          {key === 'projectUpdates' && 'Get notified about project milestones and deadlines'}
-                          {key === 'clientActivity' && 'Alerts for new client messages and requests'}
-                        </p>
+                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{label}</p>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--text-tertiary)' }}>{desc}</p>
                       </div>
                       <button
                         onClick={() => setSettings({
@@ -191,17 +166,19 @@ const Settings = () => {
                             [key]: !settings.notifications[key as keyof typeof settings.notifications]
                           }
                         })}
-                        className={`relative w-12 h-6 rounded-full transition-colors ${
-                          settings.notifications[key as keyof typeof settings.notifications]
-                            ? 'bg-gradient-to-r from-purple-500 to-blue-500'
-                            : 'bg-gray-700'
-                        }`}
+                        className="relative w-10 h-5 rounded-full transition-colors"
+                        style={{
+                          backgroundColor: settings.notifications[key as keyof typeof settings.notifications]
+                            ? 'var(--accent)' : 'var(--border-color)',
+                        }}
                       >
-                        <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-transform ${
-                          settings.notifications[key as keyof typeof settings.notifications]
-                            ? 'translate-x-6'
-                            : 'translate-x-1'
-                        }`} />
+                        <div
+                          className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform shadow-sm"
+                          style={{
+                            transform: settings.notifications[key as keyof typeof settings.notifications]
+                              ? 'translateX(22px)' : 'translateX(2px)',
+                          }}
+                        />
                       </button>
                     </div>
                   ))}
@@ -209,31 +186,61 @@ const Settings = () => {
               </div>
             )}
 
-            {/* Other tabs content would go here */}
-            {activeTab !== 'api' && activeTab !== 'notifications' && (
-              <div className="text-center py-12">
-                <SettingsIcon className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">This section is coming soon</p>
+            {/* Appearance */}
+            {activeTab === 'appearance' && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Appearance</h2>
+                  <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Customise the look and feel.</p>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Theme</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => { if (theme === 'dark') toggleTheme() }}
+                      className="p-4 rounded-xl text-center transition-all"
+                      style={{
+                        backgroundColor: theme === 'light' ? 'var(--accent-light)' : 'var(--bg-tertiary)',
+                        border: theme === 'light' ? '2px solid var(--accent)' : '1px solid var(--border-color)',
+                      }}
+                    >
+                      <Sun className="w-6 h-6 mx-auto mb-2" style={{ color: theme === 'light' ? 'var(--accent)' : 'var(--text-tertiary)' }} />
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Light</p>
+                    </button>
+                    <button
+                      onClick={() => { if (theme === 'light') toggleTheme() }}
+                      className="p-4 rounded-xl text-center transition-all"
+                      style={{
+                        backgroundColor: theme === 'dark' ? 'var(--accent-light)' : 'var(--bg-tertiary)',
+                        border: theme === 'dark' ? '2px solid var(--accent)' : '1px solid var(--border-color)',
+                      }}
+                    >
+                      <Moon className="w-6 h-6 mx-auto mb-2" style={{ color: theme === 'dark' ? 'var(--accent)' : 'var(--text-tertiary)' }} />
+                      <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Dark</p>
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
 
-            {/* Save Button */}
+            {/* Other tabs */}
+            {!['api', 'notifications', 'appearance'].includes(activeTab) && (
+              <div className="text-center py-12">
+                <div className="w-12 h-12 rounded-xl mx-auto mb-3 flex items-center justify-center"
+                  style={{ backgroundColor: 'var(--bg-tertiary)' }}
+                >
+                  {activeTab === 'profile' && <User className="w-6 h-6" style={{ color: 'var(--text-tertiary)' }} />}
+                  {activeTab === 'security' && <Shield className="w-6 h-6" style={{ color: 'var(--text-tertiary)' }} />}
+                  {activeTab === 'data' && <Database className="w-6 h-6" style={{ color: 'var(--text-tertiary)' }} />}
+                </div>
+                <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>This section is coming soon</p>
+              </div>
+            )}
+
+            {/* Save */}
             <div className="mt-8 flex justify-end">
-              <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium hover:shadow-lg transition-all"
-              >
-                {saved ? (
-                  <>
-                    <Check className="w-5 h-5" />
-                    Saved
-                  </>
-                ) : (
-                  <>
-                    <Save className="w-5 h-5" />
-                    Save Changes
-                  </>
-                )}
+              <button onClick={handleSave} className="btn-primary inline-flex items-center gap-2 text-sm">
+                {saved ? <><Check className="w-4 h-4" /> Saved</> : <><Save className="w-4 h-4" /> Save Changes</>}
               </button>
             </div>
           </div>

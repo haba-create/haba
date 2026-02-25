@@ -1,86 +1,201 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  /* Light mode (default) */
   :root {
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-tertiary: #F1F5F9;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-tertiary: #94A3B8;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --accent: #0EA5E9;
+    --accent-light: rgba(14, 165, 233, 0.1);
+    --card-bg: #FFFFFF;
+    --card-border: rgba(0, 0, 0, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --input-bg: #F8FAFC;
+    --input-border: #E2E8F0;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Dark mode */
+  .dark {
     --bg-primary: #0A0A0B;
     --bg-secondary: #111113;
+    --bg-tertiary: #1A1A1D;
     --text-primary: #FAFAFA;
-    --text-secondary: #71717A;
+    --text-secondary: #A1A1AA;
     --text-tertiary: #52525B;
     --border-color: rgba(255, 255, 255, 0.06);
     --accent: #0EA5E9;
+    --accent-light: rgba(14, 165, 233, 0.15);
+    --card-bg: rgba(255, 255, 255, 0.02);
+    --card-border: rgba(255, 255, 255, 0.06);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --input-bg: rgba(255, 255, 255, 0.05);
+    --input-border: rgba(255, 255, 255, 0.1);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
   }
-  
+
   body {
     @apply antialiased;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    font-weight: 200;
-    letter-spacing: 0.02em;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
-  
 }
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-sm bg-white/[0.02] border border-white/[0.06];
+    background-color: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
   }
-  
+
   .glass-dark {
-    @apply backdrop-blur-sm bg-black/20 border border-white/[0.04];
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
   }
-  
+  :root .glass-dark {
+    background-color: rgba(241, 245, 249, 0.5);
+  }
+  .dark .glass-dark {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
   .text-gradient {
-    @apply text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60;
+    @apply text-transparent bg-clip-text;
+    background-image: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
   }
-  
+
   .border-gradient {
     background: linear-gradient(var(--bg-primary), var(--bg-primary)) padding-box,
-                linear-gradient(90deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)) border-box;
+                linear-gradient(135deg, var(--accent), #8B5CF6) border-box;
     border: 1px solid transparent;
   }
-  
+
   .mesh-gradient {
-    background-image: 
+    background-image:
+      radial-gradient(at 40% 20%, rgba(14, 165, 233, 0.08) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.06) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(14, 165, 233, 0.06) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(139, 92, 246, 0.04) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.05) 0px, transparent 50%);
+  }
+
+  .dark .mesh-gradient {
+    background-image:
       radial-gradient(at 40% 20%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, rgba(14, 165, 233, 0.03) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.03) 0px, transparent 50%),
       radial-gradient(at 0% 50%, rgba(14, 165, 233, 0.04) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, rgba(14, 165, 233, 0.02) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(139, 92, 246, 0.02) 0px, transparent 50%),
       radial-gradient(at 0% 100%, rgba(14, 165, 233, 0.03) 0px, transparent 50%);
   }
-  
+
   .data-grid {
-    background-image: 
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .dark .data-grid {
+    background-image:
       linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 50px 50px;
   }
+
+  .card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .theme-transition {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
 }
 
 @layer components {
+  .btn-primary {
+    @apply px-6 py-2.5 rounded-lg text-white font-medium text-sm
+           transition-all duration-200;
+    background: linear-gradient(135deg, #0EA5E9 0%, #8B5CF6 100%);
+    box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+    transform: translateY(-1px);
+  }
+
   .btn-ghost {
-    @apply px-6 py-2.5 border border-white/10 text-white/90 font-light text-sm 
-           transition-all duration-300 hover:border-white/20 hover:bg-white/[0.02];
+    @apply px-6 py-2.5 rounded-lg font-medium text-sm transition-all duration-200;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
   }
-  
+  .btn-ghost:hover {
+    background-color: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
   .heading-1 {
-    @apply text-5xl md:text-6xl lg:text-7xl font-thin tracking-tight;
+    @apply text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight;
+    color: var(--text-primary);
   }
-  
+
   .heading-2 {
-    @apply text-3xl md:text-4xl font-extralight tracking-wide;
+    @apply text-3xl md:text-4xl font-semibold tracking-tight;
+    color: var(--text-primary);
   }
-  
+
   .heading-3 {
-    @apply text-xl md:text-2xl font-light;
+    @apply text-xl md:text-2xl font-medium;
+    color: var(--text-primary);
   }
-  
+
   .body-text {
-    @apply text-base font-light text-gray-400 leading-relaxed;
+    @apply text-base font-normal leading-relaxed;
+    color: var(--text-secondary);
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg text-sm transition-all duration-200;
+    background-color: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: var(--text-primary);
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+  }
+  .input-field::placeholder {
+    color: var(--text-tertiary);
   }
 }

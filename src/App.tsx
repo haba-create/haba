@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
-import DocumentGenerator from './pages/DocumentGenerator'
 import EnhancedDocumentGenerator from './pages/EnhancedDocumentGenerator'
 import SimpleDocumentGenerator from './pages/SimpleDocumentGenerator'
 import AdvancedDocumentGenerator from './pages/AdvancedDocumentGenerator'
@@ -11,8 +10,10 @@ import AIAssistants from './pages/AIAssistants'
 import Clients from './pages/Clients'
 import Projects from './pages/Projects'
 import Settings from './pages/Settings'
+import Profile from './pages/Profile'
 import DashboardLayout from './layouts/DashboardLayout'
 import { AuthContext } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
 import axios from 'axios'
 
 function App() {
@@ -38,33 +39,43 @@ function App() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gradient-bg">
-        <div className="animate-pulse text-white text-2xl">Loading...</div>
-      </div>
+      <ThemeProvider>
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: 'var(--bg-primary)' }}>
+          <div className="flex flex-col items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-500 to-violet-500 flex items-center justify-center animate-pulse">
+              <span className="text-white font-bold text-xl">H</span>
+            </div>
+            <div className="text-sm font-medium" style={{ color: 'var(--text-tertiary)' }}>Loading...</div>
+          </div>
+        </div>
+      </ThemeProvider>
     )
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
-          <Route path="/dashboard" element={
-            user ? <DashboardLayout /> : <Navigate to="/login" />
-          }>
-            <Route index element={<Dashboard />} />
-            <Route path="documents" element={<AdvancedDocumentGenerator />} />
-            <Route path="documents-simple" element={<SimpleDocumentGenerator />} />
-            <Route path="documents-old" element={<EnhancedDocumentGenerator />} />
-            <Route path="ai" element={<AIAssistants />} />
-            <Route path="clients" element={<Clients />} />
-            <Route path="projects" element={<Projects />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-        </Routes>
-      </Router>
-    </AuthContext.Provider>
+    <ThemeProvider>
+      <AuthContext.Provider value={{ user, setUser }}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+            <Route path="/dashboard" element={
+              user ? <DashboardLayout /> : <Navigate to="/login" />
+            }>
+              <Route index element={<Dashboard />} />
+              <Route path="documents" element={<AdvancedDocumentGenerator />} />
+              <Route path="documents-simple" element={<SimpleDocumentGenerator />} />
+              <Route path="documents-old" element={<EnhancedDocumentGenerator />} />
+              <Route path="ai" element={<AIAssistants />} />
+              <Route path="clients" element={<Clients />} />
+              <Route path="projects" element={<Projects />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="profile" element={<Profile />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthContext.Provider>
+    </ThemeProvider>
   )
 }
 

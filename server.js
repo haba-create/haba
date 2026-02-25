@@ -2,6 +2,7 @@ const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const path = require('path');
 require('dotenv').config();
@@ -43,6 +44,38 @@ passport.use(new LocalStrategy(
   }
 ));
 
+// Configure Google OAuth strategy (if credentials are provided)
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(new GoogleStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: process.env.GOOGLE_CALLBACK_URL || '/api/auth/google/callback'
+  }, (accessToken, refreshToken, profile, done) => {
+    // Find or create user
+    let user = users.find(u => u.googleId === profile.id || u.email === (profile.emails && profile.emails[0] && profile.emails[0].value));
+    if (!user) {
+      user = {
+        id: users.length + 1,
+        googleId: profile.id,
+        username: profile.emails?.[0]?.value || profile.id,
+        displayName: profile.displayName,
+        email: profile.emails?.[0]?.value || '',
+        photo: profile.photos?.[0]?.value || ''
+      };
+      users.push(user);
+    } else {
+      // Update photo if not set
+      if (!user.photo && profile.photos?.[0]?.value) {
+        user.photo = profile.photos[0].value;
+      }
+      if (profile.displayName) {
+        user.displayName = profile.displayName;
+      }
+    }
+    return done(null, user);
+  }));
+}
+
 passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
@@ -68,11 +101,12 @@ function ensureAuth(req, res, next) {
 // API Routes
 app.get('/api/auth/check', (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({ 
-      authenticated: true, 
+    res.json({
+      authenticated: true,
       user: {
         displayName: req.user.displayName,
-        email: req.user.email
+        email: req.user.email,
+        photo: req.user.photo || null
       }
     });
   } else {
@@ -216,6 +250,24 @@ Be professional, concise, and provide actionable insights. Format your responses
   }
 });
 
+// Google OAuth routes
+app.get('/api/auth/google',
+  (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      return res.status(501).json({ error: 'Google OAuth not configured' });
+    }
+    next();
+  },
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/api/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login?error=google_auth_failed' }),
+  (req, res) => {
+    res.redirect('/dashboard');
+  }
+);
+
 // Auth routes
 app.post('/api/auth/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -229,11 +281,12 @@ app.post('/api/auth/login', (req, res, next) => {
       if (err) {
         return res.status(500).json({ error: 'Login failed' });
       }
-      return res.json({ 
-        success: true, 
+      return res.json({
+        success: true,
         user: {
           displayName: user.displayName,
-          email: user.email
+          email: user.email,
+          photo: user.photo || null
         }
       });
     });
