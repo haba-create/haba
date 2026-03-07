@@ -149,7 +149,7 @@ const LandingPage = () => {
               }}
             >
               <Sparkles className="w-3.5 h-3.5" />
-              DATA & AI CONSULTANCY
+              DATA & AI. ARCHITECTURE & ENGINEERING
             </motion.div>
 
             {/* Headline */}
@@ -160,16 +160,25 @@ const LandingPage = () => {
               className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1]"
               style={{ color: 'var(--text-primary)' }}
             >
-              Architect Intelligent{' '}
-              <span className="text-gradient">Systems</span>
-              {' '}That Transform Enterprise Data
+              <span className="text-gradient">Intelligence</span>
             </motion.h1>
 
             {/* Subtitle */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-2xl md:text-3xl lg:text-4xl font-semibold tracking-tight"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Architect Intelligent Systems That Transform Enterprise Data
+            </motion.h2>
+
+            {/* Description */}
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
               className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
               style={{ color: 'var(--text-secondary)' }}
             >
