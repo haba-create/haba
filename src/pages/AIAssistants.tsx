@@ -22,7 +22,7 @@ interface Message {
 }
 
 const AIAssistants = () => {
-  const [selectedModel, setSelectedModel] = useState('gpt-4')
+  const [selectedModel, setSelectedModel] = useState('gpt-5.4')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [conversation, setConversation] = useState<Message[]>([
@@ -36,8 +36,8 @@ const AIAssistants = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const models = [
-    { id: 'gpt-4', name: 'GPT-4 Turbo', provider: 'OpenAI', icon: Brain },
-    { id: 'claude-sonnet', name: 'Claude Sonnet', provider: 'Anthropic', icon: Sparkles },
+    { id: 'gpt-5.4', name: 'GPT-5.4', provider: 'OpenAI', icon: Brain },
+    { id: 'claude-sonnet', name: 'Claude Sonnet 4.6', provider: 'Anthropic', icon: Sparkles },
   ]
 
   const quickPrompts = [
@@ -120,7 +120,7 @@ const AIAssistants = () => {
       >
         <div>
           <h1 className="text-2xl md:text-3xl font-bold" style={{ color: 'var(--text-primary)' }}>AI Assistants</h1>
-          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Chat with GPT-4 and Claude for your consultancy needs</p>
+          <p className="text-sm mt-1" style={{ color: 'var(--text-secondary)' }}>Chat with GPT-5.4 and Claude Opus 4.6 for your consultancy needs</p>
         </div>
         <button
           onClick={handleClearConversation}

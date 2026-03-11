@@ -21,7 +21,7 @@ async function testClaude() {
     const response = await axios.post(
       'https://api.anthropic.com/v1/messages',
       {
-        model: 'claude-2.1',
+        model: 'claude-sonnet-4-6',
         max_tokens: 100,
         messages: [
           {
@@ -60,7 +60,7 @@ async function testOpenAI() {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
       {
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-5.4',
         messages: [
           {
             role: 'user',

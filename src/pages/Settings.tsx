@@ -98,7 +98,7 @@ const Settings = () => {
                 </div>
                 <div className="space-y-4">
                   {[
-                    { key: 'openai', label: 'OpenAI API Key', placeholder: 'sk-...', desc: 'Required for GPT-4 model access' },
+                    { key: 'openai', label: 'OpenAI API Key', placeholder: 'sk-...', desc: 'Required for GPT-5.4 model access' },
                     { key: 'anthropic', label: 'Anthropic API Key', placeholder: 'sk-ant-...', desc: 'Required for Claude model access' },
                   ].map((field) => (
                     <div key={field.key}>

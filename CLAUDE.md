@@ -9,8 +9,8 @@ npm run test (if tests exist)
 
 ## Project Overview
 HABA.io is a document generation platform that creates professional documents using AI:
-- **PowerPoint, Word, Excel**: Use OpenAI GPT-4 API
-- **Google Docs**: Use Claude Sonnet 3.5 API
+- **PowerPoint, Word, Excel**: Use OpenAI GPT-5.4 API
+- **Google Docs**: Use Claude Sonnet 4.6 API
 - **Deployment**: Railway.app
 
 ## Document Generation Pipeline Architecture
@@ -58,7 +58,7 @@ Set environment variables in Railway dashboard:
 - ✅ React frontend with all pages complete
 - ✅ Document generation pipeline (OpenAI + Claude)
 - ✅ Template system (HLD, LLD, PowerPoint, Word, Excel)
-- ✅ AI service integration (OpenAI GPT-4, Claude, OpenAI Assistants)
+- ✅ AI service integration (OpenAI GPT-5.4, Claude Opus 4.6, Gemini Pro 3.1, OpenAI Assistants)
 - ✅ Microsoft Office document support (PPTX, DOCX, XLSX via Officegen)
 - ✅ PDF export support (via html-pdf-node)
 - ✅ AI Chat Assistant with real API integration
@@ -108,7 +108,7 @@ Set environment variables in Railway dashboard:
 - `POST /api/ai/chat` - Chat with AI assistant
 
 ## Architecture Notes
-- All document types now use OpenAI by default for consistent performance
-- Claude can be enabled for HLD/LLD by setting `USE_CLAUDE_FOR_DOCS=true`
+- All document types now use OpenAI GPT-5.4 by default for consistent performance
+- Claude Sonnet 4.6 can be enabled for HLD/LLD by setting `USE_CLAUDE_FOR_DOCS=true`
 - OpenAI Assistants API provides advanced agent capabilities with code interpreter
 - Document converter service handles PDF, DOCX, PPTX, XLSX output formats

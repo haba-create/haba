@@ -32,7 +32,7 @@ class OpenAIAgentService {
         const assistant = await this.openai.beta.assistants.create({
           name: 'HABA Document Generator',
           instructions: this.getSystemPrompt(),
-          model: 'gpt-4-turbo-preview',
+          model: 'gpt-5.4',
           tools: [
             { type: 'code_interpreter' },
             { type: 'retrieval' }
@@ -249,7 +249,7 @@ Format the output as a structured JSON object with sections, content, and metada
       sections,
       metadata: {
         generated: new Date().toISOString(),
-        model: 'gpt-4-turbo-preview'
+        model: 'gpt-5.4'
       }
     };
   }
@@ -365,7 +365,7 @@ Format the output as a structured JSON object with sections, content, and metada
       ];
 
       const response = await this.openai.chat.completions.create({
-        model: 'gpt-4-turbo-preview',
+        model: 'gpt-5.4',
         messages: messages,
         functions: functions,
         function_call: 'auto',
@@ -386,7 +386,7 @@ Format the output as a structured JSON object with sections, content, and metada
     const metadata = {
       type,
       generated: new Date().toISOString(),
-      model: 'gpt-4-turbo-preview'
+      model: 'gpt-5.4'
     };
 
     // Process the response

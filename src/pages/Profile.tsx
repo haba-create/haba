@@ -35,8 +35,8 @@ const Profile = () => {
       type: 'Self-employed',
       period: 'Jul 2023 - Present',
       location: 'London (Hybrid)',
-      description: 'Designed and built a cutting-edge financial analysis AI assistant leveraging GPT-4, Gemini, Claude, Mistral, and fine-tuned Llama 2. Implemented RAG, LlamaIndex, and Langchain. Deployed across GCP (Vertex AI), AWS (Bedrock), and Azure (AI Studio).',
-      skills: ['GenAI', 'RAG', 'LangChain', 'Pinecone', 'GPT-4', 'Claude', 'Multi-Cloud'],
+      description: 'Designed and built a cutting-edge financial analysis AI assistant leveraging GPT-5.4, Gemini Pro 3.1, Claude Opus 4.6, Mistral, and fine-tuned Llama models. Implemented RAG, LlamaIndex, and Langchain. Deployed across GCP (Vertex AI), AWS (Bedrock), and Azure (AI Studio).',
+      skills: ['GenAI', 'RAG', 'LangChain', 'Pinecone', 'GPT-5.4', 'Claude Opus 4.6', 'Multi-Cloud'],
     },
     {
       role: 'Lead Cloud & Data Architect',
@@ -98,7 +98,7 @@ const Profile = () => {
     {
       icon: Brain,
       title: 'AI & Machine Learning',
-      skills: ['GPT-4 / Claude / Gemini', 'RAG & LangChain', 'LlamaIndex', 'MLFlow', 'Fine-tuning', 'AI Agents', 'NLP / CCAI'],
+      skills: ['GPT-5.4 / Claude Opus 4.6 / Gemini Pro 3.1', 'RAG & LangChain', 'LlamaIndex', 'MLFlow', 'Fine-tuning', 'AI Agents', 'NLP / CCAI'],
     },
     {
       icon: Cloud,

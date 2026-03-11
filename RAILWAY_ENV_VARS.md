@@ -20,8 +20,8 @@ OPENAI_API_KEY=your-openai-api-key-here
 
 ### Model Configuration
 ```
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
-OPENAI_MODEL=gpt-4-turbo-preview
+CLAUDE_MODEL=claude-sonnet-4-6
+OPENAI_MODEL=gpt-5.4
 ```
 
 ### Feature Flags

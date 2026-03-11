@@ -1,6 +1,6 @@
 # HABA.io - AI-Powered Document Generation Platform
 
-HABA.io is a professional document generation platform that uses AI (OpenAI GPT-4 and Claude) to create high-quality technical and business documents for consultancy firms.
+HABA.io is a professional document generation platform that uses AI (OpenAI GPT-5.4, Claude Opus 4.6, and Gemini Pro 3.1) to create high-quality technical and business documents for consultancy firms.
 
 ## Features
 
@@ -12,9 +12,11 @@ HABA.io is a professional document generation platform that uses AI (OpenAI GPT-
 - **Excel Spreadsheets** - Data analysis and calculations
 
 ### AI Integration
-- **OpenAI GPT-4** - Primary AI service for document generation
-- **Claude (Anthropic)** - Alternative AI service for Google Docs
+- **OpenAI GPT-5.4** - Primary AI service for document generation
+- **Claude Opus 4.6 / Sonnet 4.6 (Anthropic)** - AI service for Google Docs and advanced reasoning
+- **Gemini Pro 3.1 (Google)** - Multi-modal AI capabilities
 - **OpenAI Assistants API** - Advanced agent capabilities with code interpreter
+- **HabaClaw** - Proprietary AI agent orchestration framework
 
 ### Document Management
 - Version control and history tracking
@@ -114,11 +116,11 @@ SESSION_SECRET=your-secure-session-secret
 
 # AI Services (Required for document generation)
 OPENAI_API_KEY=sk-your-openai-api-key
-OPENAI_MODEL=gpt-4-turbo-preview
+OPENAI_MODEL=gpt-5.4
 
 # Claude API (Optional)
 CLAUDE_API_KEY=your-claude-api-key
-CLAUDE_MODEL=claude-3-5-sonnet-20241022
+CLAUDE_MODEL=claude-sonnet-4-6
 
 # Google OAuth (Optional)
 GOOGLE_CLIENT_ID=your-google-client-id
@@ -202,7 +204,7 @@ Content-Type: multipart/form-data
 POST /api/ai/chat
 {
   "message": "Your question here",
-  "model": "gpt-4",
+  "model": "gpt-5.4",
   "conversationHistory": []
 }
 ```

@@ -5,6 +5,55 @@ import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 import { ThemeContext } from '../contexts/ThemeContext'
 
+// HabaClaw - Orange spider with claw icon
+const HabaClawIcon = ({ className = '', size = 40, opacity = 1 }: { className?: string; size?: number; opacity?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 64 64"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{ opacity }}
+  >
+    {/* Spider body */}
+    <ellipse cx="32" cy="30" rx="10" ry="12" fill="url(#spider-body)" />
+    <ellipse cx="32" cy="20" rx="7" ry="7" fill="url(#spider-head)" />
+    {/* Eyes */}
+    <circle cx="29" cy="18" r="1.5" fill="#fff" opacity="0.9" />
+    <circle cx="35" cy="18" r="1.5" fill="#fff" opacity="0.9" />
+    {/* Legs - left */}
+    <path d="M22 24 C16 18, 8 14, 4 10" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M22 28 C14 26, 6 24, 2 22" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M22 32 C14 34, 6 34, 2 34" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M24 36 C18 42, 10 46, 6 50" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    {/* Legs - right */}
+    <path d="M42 24 C48 18, 56 14, 60 10" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M42 28 C50 26, 58 24, 62 22" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M42 32 C50 34, 58 34, 62 34" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    <path d="M40 36 C46 42, 54 46, 58 50" stroke="url(#leg-grad)" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+    {/* Claw pincers at front */}
+    <path d="M28 14 C26 10, 22 8, 20 6" stroke="#F97316" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+    <path d="M20 6 C19 4, 17 4, 16 5" stroke="#F97316" strokeWidth="2" strokeLinecap="round" fill="none" />
+    <path d="M36 14 C38 10, 42 8, 44 6" stroke="#F97316" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+    <path d="M44 6 C45 4, 47 4, 48 5" stroke="#F97316" strokeWidth="2" strokeLinecap="round" fill="none" />
+    <defs>
+      <linearGradient id="spider-body" x1="32" y1="18" x2="32" y2="42" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#FB923C" />
+        <stop offset="1" stopColor="#EA580C" />
+      </linearGradient>
+      <linearGradient id="spider-head" x1="32" y1="13" x2="32" y2="27" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#FDBA74" />
+        <stop offset="1" stopColor="#F97316" />
+      </linearGradient>
+      <linearGradient id="leg-grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#FB923C" />
+        <stop offset="1" stopColor="#C2410C" />
+      </linearGradient>
+    </defs>
+  </svg>
+)
+
 const LandingPage = () => {
   const { user } = useContext(AuthContext)
   const { theme, toggleTheme } = useContext(ThemeContext)
@@ -34,7 +83,7 @@ const LandingPage = () => {
       icon: Brain,
       title: 'AI Strategy & Architecture',
       description: 'Enterprise AI roadmaps, platform design, and implementation strategies that drive measurable business outcomes.',
-      tech: ['GPT-4', 'Claude', 'RAG', 'Fine-tuning'],
+      tech: ['GPT-5.4', 'Claude 4.6', 'Gemini 3.1', 'RAG'],
     },
     {
       icon: Database,
@@ -51,8 +100,8 @@ const LandingPage = () => {
     {
       icon: Terminal,
       title: 'Generative AI Solutions',
-      description: 'Custom GenAI applications using GPT-4, Claude, RAG pipelines, and fine-tuned models for enterprise use cases.',
-      tech: ['LangChain', 'Vector DB', 'Agents', 'MCP'],
+      description: 'Custom GenAI applications using GPT-5.4, Claude Opus 4.6, Gemini Pro 3.1, RAG pipelines, and HabaClaw agent framework.',
+      tech: ['LangChain', 'Vector DB', 'AI Agents', 'HabaClaw'],
     },
     {
       icon: Network,
@@ -180,13 +229,17 @@ const LandingPage = () => {
               <span className="text-gradient">Intelligence</span>
             </motion.h1>
 
-            {/* Glowing divider line */}
+            {/* HabaClaw + Glowing divider */}
             <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ duration: 1, delay: 0.5 }}
-              className="glow-line mx-auto max-w-xs"
-            />
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              className="flex items-center justify-center gap-4"
+            >
+              <div className="glow-line flex-1 max-w-32" />
+              <HabaClawIcon size={28} opacity={0.6} className="hover:opacity-100 transition-opacity duration-500" />
+              <div className="glow-line flex-1 max-w-32" />
+            </motion.div>
 
             {/* Subtitle */}
             <motion.h2
@@ -418,6 +471,11 @@ const LandingPage = () => {
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full blur-[200px]"
           style={{ background: 'var(--glow-primary)' }} />
 
+        {/* HabaClaw watermark */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+          <HabaClawIcon size={200} opacity={0.03} />
+        </div>
+
         <div className="max-w-4xl mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -458,8 +516,14 @@ const LandingPage = () => {
               &copy; {new Date().getFullYear()} HABA. All rights reserved.
             </span>
           </div>
-          <div className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>
-            London &middot; Frankfurt &middot; Remote
+          <div className="flex items-center gap-3">
+            <HabaClawIcon size={16} opacity={0.4} />
+            <span className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>
+              HabaClaw
+            </span>
+            <span className="text-xs font-mono" style={{ color: 'var(--text-tertiary)' }}>
+              &middot; London &middot; Frankfurt &middot; Remote
+            </span>
           </div>
         </div>
       </footer>

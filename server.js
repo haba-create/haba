@@ -215,7 +215,7 @@ Be professional, concise, and provide actionable insights. Format your responses
       const response = await axios.post(
         'https://api.openai.com/v1/chat/completions',
         {
-          model: model === 'gpt-4' ? 'gpt-4-turbo-preview' : 'gpt-3.5-turbo',
+          model: model === 'gpt-4' ? 'gpt-5.4' : 'gpt-5.4',
           messages: messages,
           temperature: 0.7,
           max_tokens: 2000
@@ -336,8 +336,8 @@ app.listen(PORT, () => {
   console.log('=== API Configuration Status ===');
   console.log('Claude API Key:', process.env.CLAUDE_API_KEY ? `Configured (${process.env.CLAUDE_API_KEY.length} chars)` : 'NOT CONFIGURED');
   console.log('OpenAI API Key:', process.env.OPENAI_API_KEY ? `Configured (${process.env.OPENAI_API_KEY.length} chars)` : 'NOT CONFIGURED');
-  console.log('Claude Model:', process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022');
-  console.log('OpenAI Model:', process.env.OPENAI_MODEL || 'gpt-4-turbo-preview');
+  console.log('Claude Model:', process.env.CLAUDE_MODEL || 'claude-sonnet-4-6');
+  console.log('OpenAI Model:', process.env.OPENAI_MODEL || 'gpt-5.4');
   console.log('================================');
   
   if (!process.env.CLAUDE_API_KEY && !process.env.OPENAI_API_KEY) {
