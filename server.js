@@ -122,6 +122,20 @@ app.get('/api/user', ensureAuth, (req, res) => {
   });
 });
 
+// Import File Controller for user file uploads / downloads
+const FileController = require('./server/controllers/fileController');
+const fileController = new FileController();
+
+// File upload / download endpoints (available to any authenticated user)
+app.post('/api/files/upload',
+  ensureAuth,
+  (req, res, next) => fileController.handleUpload(req, res, next),
+  (req, res) => fileController.uploadFiles(req, res)
+);
+app.get('/api/files', ensureAuth, (req, res) => fileController.listFiles(req, res));
+app.get('/api/files/:filename/download', ensureAuth, (req, res) => fileController.downloadFile(req, res));
+app.delete('/api/files/:filename', ensureAuth, (req, res) => fileController.deleteFile(req, res));
+
 // Import Document Controllers
 const SimpleDocumentController = require('./server/controllers/simpleDocumentController');
 const simpleDocController = new SimpleDocumentController();
