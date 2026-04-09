@@ -16,6 +16,7 @@ import {
   Sun,
   Moon,
   UserCircle,
+  FolderUp,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -43,6 +44,7 @@ const DashboardLayout = () => {
     { path: '/dashboard', icon: LayoutDashboard, label: 'Overview' },
     { path: '/dashboard/profile', icon: UserCircle, label: 'Profile' },
     { path: '/dashboard/documents', icon: FileText, label: 'Documents' },
+    { path: '/dashboard/files', icon: FolderUp, label: 'Files' },
     { path: '/dashboard/ai', icon: Bot, label: 'AI Assistants' },
     { path: '/dashboard/clients', icon: Users, label: 'Clients' },
     { path: '/dashboard/projects', icon: Briefcase, label: 'Projects' },

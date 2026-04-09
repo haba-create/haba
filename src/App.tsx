@@ -11,6 +11,7 @@ import Clients from './pages/Clients'
 import Projects from './pages/Projects'
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
+import Files from './pages/Files'
 import DashboardLayout from './layouts/DashboardLayout'
 import { AuthContext } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
@@ -66,6 +67,7 @@ function App() {
               <Route path="documents" element={<AdvancedDocumentGenerator />} />
               <Route path="documents-simple" element={<SimpleDocumentGenerator />} />
               <Route path="documents-old" element={<EnhancedDocumentGenerator />} />
+              <Route path="files" element={<Files />} />
               <Route path="ai" element={<AIAssistants />} />
               <Route path="clients" element={<Clients />} />
               <Route path="projects" element={<Projects />} />
